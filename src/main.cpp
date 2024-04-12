@@ -30,6 +30,7 @@ int main()
         // processing input from previous frame
         processInput(window);
 
+        // everything that will be rendered goes below
 
         glfwSwapBuffers(window);
         glfwPollEvents();
