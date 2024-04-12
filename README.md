@@ -1,5 +1,5 @@
 # Things Betwixt
-[README na srpskom](README-sr.md).
+[README na srpskom](README-sr.md). <br>
 An OpenGL project for the course Computer graphics in Faculty of Mathematics, University of Belgrade.
 
 ## Borrowed code
@@ -16,8 +16,11 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 ## To-do
 - [ ] finish this README
 - [x] main and basic functionalities
+- [x] draw a rectangle
+- [x] draw a cube
+- [ ] movement
 - [ ] shader class
-- [ ] camera class (doesn't work currently + movement)
+- [ ] camera class
 - [ ] model class and model loading
 - [ ] error handling
 - [ ] info logs

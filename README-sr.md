@@ -1,5 +1,5 @@
 # ThingsBetwixt
-[README in english](README.md).
+[README in english](README.md). <br>
 Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u Beogradu.
 
 ## Gde sam pronasao modele
@@ -15,9 +15,12 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 
 ## Preostali posao
 - [ ] dovrsi ovaj README
-- [ ] main i osnovne funkcionalnosti
+- [x] main i osnovne funkcionalnosti
+- [x] nacrtaj pravougaonik
+- [x] nacrtaj kocku
+- [ ] kretanje
 - [ ] shader klasa
-- [ ] camera klasa (trenutno ne radi + kretanje)
+- [ ] camera klasa
 - [ ] model klasa i ucitavanje modela
 - [ ] rukovanje greskama
 - [ ] info logovi
