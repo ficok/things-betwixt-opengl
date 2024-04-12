@@ -3,7 +3,6 @@
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #include <utils.h>
 #include <shader.h>
@@ -14,7 +13,8 @@
 #define TITLE "Things betwixt"
 
 // global variables
-Camera camera(45.f, 10.f, .0f, .0f, .1f, glm::vec3(2.f, 2.f, 2.f));
+// TODO: fix this
+Camera camera(glm::vec3(2.f, 2.f, 2.f));
 
 // function declarations
 // TODO: define
@@ -37,15 +37,13 @@ int main()
     gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
 
     // creating a cube
-    std::vector<float> vertices;
-    utils::getCubeVertices(vertices);
     // creating VBO and VAO
     unsigned cubeVAO, cubeVBO;
     glGenVertexArrays(1, &cubeVAO);
     glBindVertexArray(cubeVAO);
     glGenBuffers(1, &cubeVBO);
     glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices.data()), &vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(utils::cubeVertices), &utils::cubeVertices, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -60,15 +58,21 @@ int main()
         // processing input from previous frame
         processInput(window);
 
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // everything that will be rendered goes below
         // activating the shader
         cubeShader.activate();
 
-        // TODO: creating the matrices
         glm::mat4 model = glm::mat4(1.f);
-        glm::mat4 view = camera.getViewMatrix();
-        glm::mat4 projection = glm::perspective(glm::radians(camera.fov()), (float)S_WIDTH/(float)S_HEIGHT, .1f, 10000.f);
-        // binding the vertex array
+        glm::mat4 view = glm::mat4(1.f);
+        view = glm::lookAt(glm::vec3(2.f, .0f, 2.f), glm::vec3(.0f, .0f, .0f), glm::vec3(.0f, 1.f, .0f));
+        glm::mat4 projection = glm::perspective(glm::radians(45.f), (float)S_WIDTH/(float)S_HEIGHT, .1f, 100.f);
+
+        cubeShader.setMat4("model", model);
+        cubeShader.setMat4("view", view);
+        cubeShader.setMat4("projection", projection);
+
+        // binding the vertex array and drawing
         glBindVertexArray(cubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -83,6 +87,7 @@ int main()
     glfwTerminate();
 }
 
+// TODO
 void processInput(GLFWwindow* window)
 {
     std::cout << "";

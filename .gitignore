@@ -1,7 +1,8 @@
-ThingsBetwixt
-
 # models
 resources/objects/
+
+# executable file
+ThingsBetwixt
 
 ### bin ###
 bin/
