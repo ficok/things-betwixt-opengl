@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 namespace utils
 {
@@ -17,6 +18,55 @@ namespace utils
         std::stringstream buffer;
         buffer << in.rdbuf();
         return buffer.str();
+    }
+
+    void getCubeVertices(std::vector<float>& vertices)
+    {
+        vertices =
+        {
+             // positions
+            -.5f,  .5f, -.5f,
+            -.5f, -.5f, -.5f,
+             .5f, -.5f, -.5f,
+             .5f, -.5f, -.5f,
+             .5f,  .5f, -.5f,
+            -.5f,  .5f, -.5f,
+
+            -.5f, -.5f,  .5f,
+            -.5f, -.5f, -.5f,
+            -.5f,  .5f, -.5f,
+            -.5f,  .5f, -.5f,
+            -.5f,  .5f,  .5f,
+            -.5f, -.5f,  .5f,
+
+             .5f, -.5f, -.5f,
+             .5f, -.5f,  .5f,
+             .5f,  .5f,  .5f,
+            .5f,  .5f,  .5f,
+             .5f,  .5f, -.5f,
+             .5f, -.5f, -.5f,
+
+            -.5f, -.5f,  .5f,
+            -.5f,  .5f,  .5f,
+             .5f,  .5f,  .5f,
+             .5f,  .5f,  .5f,
+             .5f, -.5f,  .5f,
+            -.5f, -.5f,  .5f,
+
+            -.5f,  .5f, -.5f,
+             .5f,  .5f, -.5f,
+             .5f,  .5f,  .5f,
+             .5f,  .5f,  .5f,
+            -.5f,  .5f,  .5f,
+            -.5f,  .5f, -.5f,
+
+            -.5f, -.5f, -.5f,
+            -.5f, -.5f,  .5f,
+             .5f, -.5f, -.5f,
+             .5f, -.5f, -.5f,
+            -.5f, -.5f,  .5f,
+             .5f, -.5f,  .5f
+        };
     }
 }
 
