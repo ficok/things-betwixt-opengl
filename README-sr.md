@@ -35,6 +35,7 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 - [x] neke akcije na tastaturi (poput gasenja) (14.04.2024.)
 - [ ] razne callback funkcije
 - [ ] skybox
-- [ ] ucitavanje modela
-- [ ] model klasa
+- [ ] directional osvetljenje
+- [ ] point osvetljenje
+- [ ] spotlight sa paljenjem i gasenjem
 - [ ] doradjivanje modela sa svicima i 'vodom'

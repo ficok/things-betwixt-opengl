@@ -35,6 +35,7 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 - [x] some keyboard actions (such as exiting) (14.04.2024.)
 - [ ] various callback functions
 - [ ] skybox
-- [ ] model importing
-- [ ] model class
+- [ ] directional light
+- [ ] point light
+- [ ] spotlight with toggle
 - [ ] reworking the model with fireflies and 'water'
