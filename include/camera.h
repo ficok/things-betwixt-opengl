@@ -91,6 +91,36 @@ public:
         }
     }
 
+    void updateCameraView(double xoffset, double yoffset, bool invertAxis = false)
+    {
+        xoffset *= _mouseSensitivity;
+        yoffset *= _mouseSensitivity;
+
+        if (invertAxis)
+        {
+            _yaw += xoffset;
+            _pitch += yoffset;
+        }
+        else
+        {
+            _yaw -= xoffset;
+            _pitch -= yoffset;
+        }
+
+        if (_pitch > 89.f) _pitch = 89.f;
+        if (_pitch < -89.f) _pitch = -89.f;
+
+        updateCameraVectors();
+    }
+
+    void updateFOV(double yoffset)
+    {
+        _zoom -= (float)yoffset;
+
+        if (_zoom < 1.f) _zoom = 1.f;
+        if (_zoom > 45.f) _zoom = 45.f;
+    }
+
     glm::mat4 getViewMatrix()
     const {
         return glm::lookAt(_position, _position + _front, _up);

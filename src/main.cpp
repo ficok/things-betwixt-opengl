@@ -12,18 +12,29 @@
 #define S_HEIGHT 1500
 #define TITLE "Things betwixt"
 
+// structure definitions
+struct Mouse
+{
+    double lastX;
+    double lastY;
+    bool firstMovement;
+};
+
 // function declarations
 // TODO: define
 void processInput(GLFWwindow* window);
 
 // callback functions
-void framebufferSizeCallback(GLFWwindow* windiw, int width, int height);
+void framebufferSizeCallback(GLFWwindow* window, int width, int height);
+void mouseCallback(GLFWwindow* window, double xpos, double ypos);
+void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 
 // global variables
 // TODO: fix this
-Camera camera(glm::vec3(2.f, .0f, 2.f));
+Camera camera(glm::vec3(.0f, .0f, .0f));
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+Mouse mouse = {(double)S_WIDTH/2, (double)S_HEIGHT/2, true};
 
 int main()
 {
@@ -41,8 +52,13 @@ int main()
     // TODO: error handling
     gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
 
-    // initiating callback functions
+    // configuring callback functions
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+    glfwSetCursorPosCallback(window, mouseCallback);
+    glfwSetScrollCallback(window, scrollCallback);
+
+    // capture cursor
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // creating a cube
     // creating VBO and VAO
@@ -88,6 +104,7 @@ int main()
         // processing input from previous frame
         processInput(window);
 
+        glClearColor(.1f, .1f, .1f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // everything that will be rendered goes below
         // activating the shader
@@ -147,4 +164,27 @@ void processInput(GLFWwindow* window)
 void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+}
+
+void mouseCallback(GLFWwindow* window, double xpos, double ypos)
+{
+    if (mouse.firstMovement)
+    {
+        mouse.lastX = xpos;
+        mouse.lastY = ypos;
+        mouse.firstMovement = false;
+    }
+
+    float xoffset = xpos - mouse.lastX;
+    float yoffset = mouse.lastY - ypos;
+
+    mouse.lastX = xpos;
+    mouse.lastY = ypos;
+
+    camera.updateCameraView(xoffset, yoffset);
+}
+
+void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    camera.updateFOV(yoffset);
 }
