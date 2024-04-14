@@ -12,13 +12,18 @@
 #define S_HEIGHT 1500
 #define TITLE "Things betwixt"
 
-// global variables
-// TODO: fix this
-Camera camera(glm::vec3(2.f, 2.f, 2.f));
-
 // function declarations
 // TODO: define
 void processInput(GLFWwindow* window);
+
+// callback functions
+void framebufferSizeCallback(GLFWwindow* windiw, int width, int height);
+
+// global variables
+// TODO: fix this
+Camera camera(glm::vec3(2.f, .0f, 2.f));
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
 
 int main()
 {
@@ -36,6 +41,9 @@ int main()
     // TODO: error handling
     gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
 
+    // initiating callback functions
+    glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+
     // creating a cube
     // creating VBO and VAO
     unsigned cubeVAO, cubeVBO;
@@ -48,13 +56,35 @@ int main()
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+    // cube positions
+    std::vector<glm::vec3> cubePositions =
+    {
+        glm::vec3(2.f, .0f, .0f),
+        glm::vec3(-2.f, .0f, .0f),
+        glm::vec3(.0f, 2.f, .0f),
+        glm::vec3(.0f, -2.f, .0f),
+        glm::vec3(.0f, .0f, 2.f),
+        glm::vec3(.0f, .0f, -2.f)
+    };
+
 
     // creating a shader program
     Shader cubeShader("resources/shaders/vertex.vs", "resources/shaders/fragment.fs", "cube");
 
+    glm::mat4 view = glm::mat4(1.f);
+    view = camera.getViewMatrix();
+    std::cout << "[" << view[0][0] << ' ' << view[0][1] << ' ' << view[0][2] << ' ' << view[0][3] << "]\n"
+              << "[" << view[1][0] << ' ' << view[1][1] << ' ' << view[1][2] << ' ' << view[1][3] << "]\n"
+              << "[" << view[2][0] << ' ' << view[2][1] << ' ' << view[2][2] << ' ' << view[2][3] << "]\n"
+              << "[" << view[3][0] << ' ' << view[3][1] << ' ' << view[3][2] << ' ' << view[3][3] << "]\n";
     // render loop
     while (!glfwWindowShouldClose(window))
     {
+        // calculating time passed since the last frame
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
         // processing input from previous frame
         processInput(window);
 
@@ -63,18 +93,23 @@ int main()
         // activating the shader
         cubeShader.activate();
 
-        glm::mat4 model = glm::mat4(1.f);
+        // this will work when i add camera movement, because the cube is out of the fov of the camera
         glm::mat4 view = glm::mat4(1.f);
-        view = glm::lookAt(glm::vec3(2.f, .0f, 2.f), glm::vec3(.0f, .0f, .0f), glm::vec3(.0f, 1.f, .0f));
-        glm::mat4 projection = glm::perspective(glm::radians(45.f), (float)S_WIDTH/(float)S_HEIGHT, .1f, 100.f);
-
-        cubeShader.setMat4("model", model);
+        // view = glm::lookAt(glm::vec3(2.f, .0f, 2.f), glm::vec3(.0f, .0f, .0f), glm::vec3(.0f, 1.f, .0f));
+        view = camera.getViewMatrix();
+        glm::mat4 projection = glm::perspective(glm::radians(camera.fov()), (float)S_WIDTH/(float)S_HEIGHT, .1f, 100.f);
         cubeShader.setMat4("view", view);
         cubeShader.setMat4("projection", projection);
 
-        // binding the vertex array and drawing
-        glBindVertexArray(cubeVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glm::mat4 model = glm::mat4(1.f);
+        for (int i = 0; i < 6; ++i)
+        {
+            model = glm::translate(model, cubePositions[i]);
+            cubeShader.setMat4("model", model);
+            // binding the vertex array and drawing
+            glBindVertexArray(cubeVAO);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -90,5 +125,26 @@ int main()
 // TODO
 void processInput(GLFWwindow* window)
 {
-    std::cout << "";
+    // closing the program
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+
+    // camera movement
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera.updatePosition(FORWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera.updatePosition(LEFT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera.updatePosition(BACKWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera.updatePosition(RIGHT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+        camera.updatePosition(UP, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        camera.updatePosition(DOWN, deltaTime);
+}
+
+void framebufferSizeCallback(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
 }
