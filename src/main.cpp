@@ -20,6 +20,13 @@ struct Mouse
     bool firstMovement;
 };
 
+struct Frame
+{
+    double delta;
+    double last;
+    double current;
+};
+
 // function declarations
 // TODO: define
 void processInput(GLFWwindow* window);
@@ -32,8 +39,7 @@ void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 // global variables
 // TODO: fix this
 Camera camera(glm::vec3(.0f, .0f, .0f));
-float deltaTime = 0.0f;
-float lastFrame = 0.0f;
+Frame frame = {.0f, .0f, .0f};
 Mouse mouse = {(double)S_WIDTH/2, (double)S_HEIGHT/2, true};
 
 int main()
@@ -60,6 +66,9 @@ int main()
     // capture cursor
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
+    // depth testing
+    glEnable(GL_DEPTH_TEST);
+
     // creating a cube
     // creating VBO and VAO
     unsigned cubeVAO, cubeVBO;
@@ -75,14 +84,23 @@ int main()
     // cube positions
     std::vector<glm::vec3> cubePositions =
     {
-        glm::vec3(2.f, .0f, .0f),
-        glm::vec3(-2.f, .0f, .0f),
-        glm::vec3(.0f, 2.f, .0f),
-        glm::vec3(.0f, -2.f, .0f),
-        glm::vec3(.0f, .0f, 2.f),
-        glm::vec3(.0f, .0f, -2.f)
+        glm::vec3(3.f, .0f, .0f),
+        glm::vec3(-3.f, .0f, .0f),
+        glm::vec3(.0f, 3.f, .0f),
+        glm::vec3(.0f, -3.f, .0f),
+        glm::vec3(.0f, .0f, 3.f),
+        glm::vec3(.0f, .0f, -3.f)
     };
 
+    std::vector<glm::vec3> cubeColors =
+    {
+        glm::vec3(.0f, 1.f, .0f), // +x: green
+        glm::vec3(.0f, .5f, .0f), // -x: dark green
+        glm::vec3(1.f, .0f, .0f), // +y: red
+        glm::vec3(.5f, .0f, .0f), // -y: dark red
+        glm::vec3(.0f, .0f, 1.f), // +z: blue
+        glm::vec3(.0f, .0f, .5f)  // -z: darkblue
+    };
 
     // creating a shader program
     Shader cubeShader("resources/shaders/vertex.vs", "resources/shaders/fragment.fs", "cube");
@@ -97,9 +115,9 @@ int main()
     while (!glfwWindowShouldClose(window))
     {
         // calculating time passed since the last frame
-        float currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
+        frame.current = glfwGetTime();
+        frame.delta = frame.current - frame.last;
+        frame.last = frame.current;
 
         // processing input from previous frame
         processInput(window);
@@ -118,10 +136,12 @@ int main()
         cubeShader.setMat4("view", view);
         cubeShader.setMat4("projection", projection);
 
-        glm::mat4 model = glm::mat4(1.f);
+        glm::mat4 model;
         for (int i = 0; i < 6; ++i)
         {
+            model = glm::mat4(1.f);
             model = glm::translate(model, cubePositions[i]);
+            cubeShader.setVec3("color", cubeColors[i]);
             cubeShader.setMat4("model", model);
             // binding the vertex array and drawing
             glBindVertexArray(cubeVAO);
@@ -148,17 +168,17 @@ void processInput(GLFWwindow* window)
 
     // camera movement
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.updatePosition(FORWARD, deltaTime);
+        camera.updatePosition(FORWARD, frame.delta);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.updatePosition(LEFT, deltaTime);
+        camera.updatePosition(LEFT, frame.delta);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.updatePosition(BACKWARD, deltaTime);
+        camera.updatePosition(BACKWARD, frame.delta);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.updatePosition(RIGHT, deltaTime);
+        camera.updatePosition(RIGHT, frame.delta);
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-        camera.updatePosition(UP, deltaTime);
+        camera.updatePosition(UP, frame.delta);
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-        camera.updatePosition(DOWN, deltaTime);
+        camera.updatePosition(DOWN, frame.delta);
 }
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height)

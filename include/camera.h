@@ -43,6 +43,7 @@ public:
 
         _position = position;
         _worldUp = worldUp;
+        _up = worldUp;
 
         updateCameraVectors();
         std::cout << "INFO [camera]: initiailization complete:\n"
@@ -62,10 +63,11 @@ public:
 
     void updateCameraVectors()
     {
-        _front.x = cos(glm::radians(_yaw) * cos(glm::radians(_pitch)));
-        _front.y = sin(glm::radians(_pitch));
-        _front.z = cos(glm::radians(_yaw) * sin(glm::radians(_pitch)));
-        _front = glm::normalize(_front);
+        glm::vec3 frontTmp;
+        frontTmp.x = cos(glm::radians(_yaw)) * cos(glm::radians(_pitch));
+        frontTmp.y = sin(glm::radians(_pitch));
+        frontTmp.z = sin(glm::radians(_yaw)) * cos(glm::radians(_pitch));
+        _front = glm::normalize(frontTmp);
 
         _right = glm::normalize(glm::cross(_front, _worldUp));
         _up = glm::normalize(glm::cross(_right, _front));
@@ -85,9 +87,9 @@ public:
             case RIGHT:
                 _position += _right * movementSpeed; break;
             case UP:
-                _position += glm::normalize(glm::cross(_front, _right)) * movementSpeed;
+                _position += _up * movementSpeed; break;
             case DOWN:
-                _position -= glm::normalize(glm::cross(_front, _right)) * movementSpeed;
+                _position -= _up * movementSpeed; break;
         }
     }
 
@@ -98,13 +100,13 @@ public:
 
         if (invertAxis)
         {
-            _yaw += xoffset;
-            _pitch += yoffset;
+            _yaw -= xoffset;
+            _pitch -= yoffset;
         }
         else
         {
-            _yaw -= xoffset;
-            _pitch -= yoffset;
+            _yaw += xoffset;
+            _pitch += yoffset;
         }
 
         if (_pitch > 89.f) _pitch = 89.f;
