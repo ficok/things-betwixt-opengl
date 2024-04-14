@@ -63,12 +63,10 @@ public:
 
     void updateCameraVectors()
     {
-        glm::vec3 frontTmp;
-        frontTmp.x = cos(glm::radians(_yaw)) * cos(glm::radians(_pitch));
-        frontTmp.y = sin(glm::radians(_pitch));
-        frontTmp.z = sin(glm::radians(_yaw)) * cos(glm::radians(_pitch));
-        _front = glm::normalize(frontTmp);
-
+        _front.x = cos(glm::radians(_yaw)) * cos(glm::radians(_pitch));
+        _front.y = sin(glm::radians(_pitch));
+        _front.z = sin(glm::radians(_yaw)) * cos(glm::radians(_pitch));
+        _front = glm::normalize(_front);
         _right = glm::normalize(glm::cross(_front, _worldUp));
         _up = glm::normalize(glm::cross(_right, _front));
     }

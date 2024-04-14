@@ -7,30 +7,34 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 ## Odakle sam pozajmio kod
 
 ## Progres
-| Funkcionalnost | Status  | Progres  |
-|----------------|---------|----------|
-| Shader.h       | Radi    | U radu   |
-| Camera.h       | Ne radi | U radu   |
-| Model.h        | Nema    | Nema     |
-| Kretanje | Nema | Nema |
-| Point osvetljenje | Nema | Nema |
-| Directional osvetljenje | Nema | Nema |
-| Spotlight | Nema | Nema |
-| Napredno osvetljenje | Nema | Nema |
-| Blending | Nema | Nema |
-| Face culling | Nema | Nema |
-| Skybox | Nema | Nema |
-| Bloom | Nema | Nema |
+| Funkcionalnost                  | Status | Progres |
+|---------------------------------|--------|---------|
+| Shader kompilacija i linkovanje | Radi   | Gotovo  |
+| Camera kretanje                 | Radi   | Gotovo  |
+| Camera gledanje                 | Radi   | Gotovo  |
+| Model ucitavanje                | Nema   | Nema    |
+| Point osvetljenje               | Nema   | Nema    |
+| Directional osvetljenje         | Nema   | Nema    |
+| Spotlight                       | Nema   | Nema    |
+| Napredno osvetljenje            | Nema   | Nema    |
+| Blending                        | Nema   | Nema    |
+| Face culling                    | Nema   | Nema    |
+| Skybox                          | Nema   | Nema    |
+| Bloom                           | Nema   | Nema    |
 
 ## Preostali posao
 - [ ] dovrsi ovaj README
 - [x] main i osnovne funkcionalnosti (12.04.2024.)
 - [x] nacrtaj pravougaonik (12.04.2024.)
 - [x] nacrtaj kocku (12.04.2024.)
-- [ ] kretanje
-- [ ] shader klasa
-- [ ] camera klasa
+- [x] kretanje (14.04.2024.)
+- [x] shader klasa, preostala neka postavljanja uniformnih (14.04.2024.)
+- [x] camera klasa (14.04.2024.)
 - [ ] rukovanje greskama
 - [ ] info logovi
-- [ ] neke akcije na tastaturi (poput gasenja)
+- [x] neke akcije na tastaturi (poput gasenja) (14.04.2024.)
 - [ ] razne callback funkcije
+- [ ] skybox
+- [ ] ucitavanje modela
+- [ ] model klasa
+- [ ] doradjivanje modela sa svicima i 'vodom'

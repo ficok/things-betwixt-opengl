@@ -91,7 +91,7 @@ int main()
         glm::vec3(.0f, .0f, 3.f),
         glm::vec3(.0f, .0f, -3.f)
     };
-
+    // cube colors
     std::vector<glm::vec3> cubeColors =
     {
         glm::vec3(.0f, 1.f, .0f), // +x: green
@@ -105,12 +105,6 @@ int main()
     // creating a shader program
     Shader cubeShader("resources/shaders/vertex.vs", "resources/shaders/fragment.fs", "cube");
 
-    glm::mat4 view = glm::mat4(1.f);
-    view = camera.getViewMatrix();
-    std::cout << "[" << view[0][0] << ' ' << view[0][1] << ' ' << view[0][2] << ' ' << view[0][3] << "]\n"
-              << "[" << view[1][0] << ' ' << view[1][1] << ' ' << view[1][2] << ' ' << view[1][3] << "]\n"
-              << "[" << view[2][0] << ' ' << view[2][1] << ' ' << view[2][2] << ' ' << view[2][3] << "]\n"
-              << "[" << view[3][0] << ' ' << view[3][1] << ' ' << view[3][2] << ' ' << view[3][3] << "]\n";
     // render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -128,14 +122,13 @@ int main()
         // activating the shader
         cubeShader.activate();
 
-        // this will work when i add camera movement, because the cube is out of the fov of the camera
+        // updating the view and projection matrices
         glm::mat4 view = glm::mat4(1.f);
-        // view = glm::lookAt(glm::vec3(2.f, .0f, 2.f), glm::vec3(.0f, .0f, .0f), glm::vec3(.0f, 1.f, .0f));
         view = camera.getViewMatrix();
         glm::mat4 projection = glm::perspective(glm::radians(camera.fov()), (float)S_WIDTH/(float)S_HEIGHT, .1f, 100.f);
         cubeShader.setMat4("view", view);
         cubeShader.setMat4("projection", projection);
-
+        // drawing
         glm::mat4 model;
         for (int i = 0; i < 6; ++i)
         {
