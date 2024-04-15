@@ -1,6 +1,5 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -12,6 +11,7 @@
 #define S_HEIGHT 1500
 #define TITLE "Things betwixt"
 
+// TODO: move structure definitions into utils.h
 // structure definitions
 struct Mouse
 {
@@ -27,8 +27,15 @@ struct Frame
     double current;
 };
 
+struct DirectionalLight
+{
+    glm::vec3 direction;
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
+};
+
 // function declarations
-// TODO: define
 void processInput(GLFWwindow* window);
 
 // callback functions
@@ -37,7 +44,6 @@ void mouseCallback(GLFWwindow* window, double xpos, double ypos);
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 
 // global variables
-// TODO: fix this
 Camera camera(glm::vec3(.0f, .0f, .0f));
 Frame frame = {.0f, .0f, .0f};
 Mouse mouse = {(double)S_WIDTH/2, (double)S_HEIGHT/2, true};
@@ -70,15 +76,24 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
     // creating a cube
-    // creating VBO and VAO
+    // configuring VBO and VAO
     unsigned cubeVAO, cubeVBO;
     glGenVertexArrays(1, &cubeVAO);
     glBindVertexArray(cubeVAO);
     glGenBuffers(1, &cubeVBO);
     glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(utils::cubeVertices), &utils::cubeVertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(utils::cubeVerticesWNormalsTextures),
+                 &utils::cubeVerticesWNormalsTextures, GL_STATIC_DRAW);
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)nullptr);
     glEnableVertexAttribArray(0);
+    // normal attribte
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(3*sizeof(float)));
+    glEnableVertexAttribArray(1);
+    // texture attribute
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(6*sizeof(float)));
+    glEnableVertexAttribArray(2);
+    // unbinding buffers
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
     // cube positions
@@ -105,6 +120,15 @@ int main()
     // creating a shader program
     Shader cubeShader("resources/shaders/vertex.vs", "resources/shaders/fragment.fs", "cube");
 
+    // initializing the light
+    DirectionalLight directionalLight =
+    {
+            glm::vec3(.0f, -1.f, .0f),
+            glm::vec3(.2f),
+            glm::vec3(1.f),
+            glm::vec3(.1f)
+    };
+
     // render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -115,22 +139,30 @@ int main()
 
         // processing input from previous frame
         processInput(window);
-
+        // clearing buffers for the current frame
         glClearColor(.1f, .1f, .1f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // everything that will be rendered goes below
         // activating the shader
         cubeShader.activate();
-
+        // sending camera information to shader
+        cubeShader.setVec3("viewPosition", camera._position);
+        // sending light information to shader
+        cubeShader.setVec3("directionalLight.direction", directionalLight.direction);
+        cubeShader.setVec3("directionalLight.ambient", directionalLight.ambient);
+        cubeShader.setVec3("directionalLight.diffuse", directionalLight.diffuse);
+        cubeShader.setVec3("directionalLight.specular", directionalLight.specular);
         // updating the view and projection matrices
         glm::mat4 view = glm::mat4(1.f);
         view = camera.getViewMatrix();
-        glm::mat4 projection = glm::perspective(glm::radians(camera.fov()), (float)S_WIDTH/(float)S_HEIGHT, .1f, 100.f);
+        glm::mat4 projection =
+                glm::perspective(glm::radians(camera.fov()), (float)S_WIDTH/(float)S_HEIGHT, .1f, 100.f);
         cubeShader.setMat4("view", view);
         cubeShader.setMat4("projection", projection);
         // drawing
         glm::mat4 model;
-        for (int i = 0; i < 6; ++i)
+        int n = cubePositions.size();
+        for (int i = 0; i < n; ++i)
         {
             model = glm::mat4(1.f);
             model = glm::translate(model, cubePositions[i]);
@@ -152,7 +184,6 @@ int main()
     glfwTerminate();
 }
 
-// TODO
 void processInput(GLFWwindow* window)
 {
     // closing the program
@@ -161,26 +192,29 @@ void processInput(GLFWwindow* window)
 
     // camera movement
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.updatePosition(FORWARD, frame.delta);
+        camera.updatePosition(FORWARD, (float)frame.delta);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.updatePosition(LEFT, frame.delta);
+        camera.updatePosition(LEFT, (float)frame.delta);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.updatePosition(BACKWARD, frame.delta);
+        camera.updatePosition(BACKWARD, (float)frame.delta);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.updatePosition(RIGHT, frame.delta);
+        camera.updatePosition(RIGHT, (float)frame.delta);
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-        camera.updatePosition(UP, frame.delta);
+        camera.updatePosition(UP, (float)frame.delta);
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-        camera.updatePosition(DOWN, frame.delta);
+        camera.updatePosition(DOWN, (float)frame.delta);
 }
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
+    UNUSED(window);
     glViewport(0, 0, width, height);
 }
 
+// TODO: comments
 void mouseCallback(GLFWwindow* window, double xpos, double ypos)
 {
+    UNUSED(window);
     if (mouse.firstMovement)
     {
         mouse.lastX = xpos;
@@ -188,8 +222,8 @@ void mouseCallback(GLFWwindow* window, double xpos, double ypos)
         mouse.firstMovement = false;
     }
 
-    float xoffset = xpos - mouse.lastX;
-    float yoffset = mouse.lastY - ypos;
+    auto xoffset = (float)(xpos - mouse.lastX);
+    auto yoffset = (float)(mouse.lastY - ypos);
 
     mouse.lastX = xpos;
     mouse.lastY = ypos;
@@ -199,5 +233,7 @@ void mouseCallback(GLFWwindow* window, double xpos, double ypos)
 
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
+    UNUSED(window);
+    UNUSED(xoffset);
     camera.updateFOV(yoffset);
 }

@@ -60,7 +60,7 @@ public:
         << "- front: (" << _front.x << ", " << _front.y << ", " << _front.z << ")\n"
         << "----------\n\n";
     }
-
+    // TODO: comments
     void updateCameraVectors()
     {
         _front.x = cos(glm::radians(_yaw)) * cos(glm::radians(_pitch));
@@ -70,7 +70,7 @@ public:
         _right = glm::normalize(glm::cross(_front, _worldUp));
         _up = glm::normalize(glm::cross(_right, _front));
     }
-
+    // TODO: comments
     void updatePosition(Movement direction, float deltaTime)
     {
         float movementSpeed = _speed * deltaTime;
@@ -85,12 +85,12 @@ public:
             case RIGHT:
                 _position += _right * movementSpeed; break;
             case UP:
-                _position += _up * movementSpeed; break;
+                _position += _worldUp * movementSpeed; break;
             case DOWN:
-                _position -= _up * movementSpeed; break;
+                _position -= _worldUp * movementSpeed; break;
         }
     }
-
+    // TODO: comments
     void updateCameraView(double xoffset, double yoffset, bool invertAxis = false)
     {
         xoffset *= _mouseSensitivity;
@@ -112,7 +112,7 @@ public:
 
         updateCameraVectors();
     }
-
+    // TODO: comments
     void updateFOV(double yoffset)
     {
         _zoom -= (float)yoffset;
