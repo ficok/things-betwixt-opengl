@@ -9,8 +9,23 @@ struct DirectionalLight
     vec3 diffuse;
     vec3 specular;
 };
+
+struct PointLight
+{
+    vec3 position;
+    vec3 direction;
+
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+
+    float constant;
+    float linear;
+    float quadratic;
+};
 // function declarations
-vec3 calculateDirectional(DirectionalLight directionalLight, vec3 normal, vec3 fragmentPosition);
+vec3 calculateDirectional(DirectionalLight directionalLight, vec3 normal, vec3 viewDirection);
+vec3 calculatePoint(PointLight pointLight, vec3 normal, vec3 viewDirection, vec3 fragmentPosition);
 // in variables
 in vec3 Normal;
 in vec3 FragmentPosition;
@@ -18,6 +33,7 @@ in vec3 FragmentPosition;
 uniform vec3 viewPosition;
 uniform vec3 color;
 uniform DirectionalLight directionalLight;
+uniform PointLight pointLight;
 
 void main()
 {
@@ -25,7 +41,8 @@ void main()
     vec3 viewDirection = normalize(viewPosition - FragmentPosition);
 
     vec3 result = vec3(0.0f, 0.0f, 0.0f);
-    result += calculateDirectional(directionalLight, normal, FragmentPosition);
+    result += calculateDirectional(directionalLight, normal, viewDirection);
+    result += calculatePoint(pointLight, normal, viewDirection, FragmentPosition);
 
     FragColor = vec4(result, 1.0f);
 }
@@ -43,9 +60,27 @@ vec3 calculateDirectional(DirectionalLight light, vec3 normal, vec3 viewDirectio
     // calculating the light components
     vec3 ambient = light.ambient * color;
     vec3 diffuse = light.diffuse * diffuseFactor * color;
-    // if it's only color, or the right combination of .xxx, .yyy, or .zzz and the direction of
-    // light, the specular component behaves weirdly
-    vec3 specular = light.specular * specularFactor * color.yyy;
+    vec3 specular = light.specular * specularFactor * color;
+
+    return ambient + diffuse + specular;
+}
+
+vec3 calculatePoint(PointLight light, vec3 normal, vec3 viewDirection, vec3 fragmentPosition)
+{
+    // light direction vector that originates in the fragment
+    vec3 lightDirection = normalize(light.position - fragmentPosition);
+    // calculating the diffuse factor
+    float diffuseFactor = max(dot(normal, lightDirection), .0f);
+    // calculating the specular factor
+    vec3 reflectionDirection = reflect(-light.direction, normal);
+    float specularFactor = pow(max(dot(reflectionDirection, normal), .0f), 32.f);
+    // calculating attenuation
+    float distance = length(light.position - fragmentPosition);
+    float attenuation = 1.f / (light.constant + light.linear * distance + light.quadratic * distance * distance);
+    // calculating light components
+    vec3 ambient = light.ambient * color * attenuation;
+    vec3 diffuse = light.diffuse * diffuseFactor * color * attenuation;
+    vec3 specular = light.specular * specularFactor * color * attenuation;
 
     return ambient + diffuse + specular;
 }

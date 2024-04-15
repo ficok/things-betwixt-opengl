@@ -14,7 +14,7 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 | Camera gledanje                 | Radi   | Gotovo  |
 | Model ucitavanje                | Nema   | Nema    |
 | Point osvetljenje               | Nema   | Nema    |
-| Directional osvetljenje         | Nema   | Nema    |
+| Directional osvetljenje         | Radi   | Gotovo  |
 | Spotlight                       | Nema   | Nema    |
 | Napredno osvetljenje            | Nema   | Nema    |
 | Blending                        | Nema   | Nema    |

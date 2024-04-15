@@ -35,6 +35,20 @@ struct DirectionalLight
     glm::vec3 specular;
 };
 
+struct PointLight
+{
+    glm::vec3 position;
+    glm::vec3 direction;
+
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
+
+    float constant;
+    float linear;
+    float quadratic;
+};
+
 // function declarations
 void processInput(GLFWwindow* window);
 
@@ -104,7 +118,9 @@ int main()
         glm::vec3(.0f, 3.f, .0f),
         glm::vec3(.0f, -3.f, .0f),
         glm::vec3(.0f, .0f, 3.f),
-        glm::vec3(.0f, .0f, -3.f)
+        glm::vec3(.0f, .0f, -3.f),
+
+        glm::vec3(6.f)
     };
     // cube colors
     std::vector<glm::vec3> cubeColors =
@@ -114,7 +130,9 @@ int main()
         glm::vec3(1.f, .0f, .0f), // +y: red
         glm::vec3(.5f, .0f, .0f), // -y: dark red
         glm::vec3(.0f, .0f, 1.f), // +z: blue
-        glm::vec3(.0f, .0f, .5f)  // -z: darkblue
+        glm::vec3(.0f, .0f, .5f), // -z: darkblue
+
+        glm::vec3(1.f)             // light cube
     };
 
     // creating a shader program
@@ -123,10 +141,22 @@ int main()
     // initializing the light
     DirectionalLight directionalLight =
     {
-            glm::vec3(.0f, -1.f, .0f),
-            glm::vec3(.2f),
-            glm::vec3(1.f),
-            glm::vec3(.1f)
+        glm::vec3(.0f, -1.f, .0f),
+        glm::vec3(.2f),
+        glm::vec3(.2f),
+        glm::vec3(.2f)
+    };
+
+    PointLight pointLight =
+    {
+        glm::vec3(6.f),
+        glm::vec3(.0f),
+
+        glm::vec3(.1f),
+        glm::vec3(1.f),
+        glm::vec3(1.f),
+
+        1.f, .09f, .032f
     };
 
     // render loop
@@ -147,11 +177,22 @@ int main()
         cubeShader.activate();
         // sending camera information to shader
         cubeShader.setVec3("viewPosition", camera._position);
+        // TODO: create functions in shader that do this by passing the reference to the struct instance
         // sending light information to shader
+        // directional
         cubeShader.setVec3("directionalLight.direction", directionalLight.direction);
         cubeShader.setVec3("directionalLight.ambient", directionalLight.ambient);
         cubeShader.setVec3("directionalLight.diffuse", directionalLight.diffuse);
         cubeShader.setVec3("directionalLight.specular", directionalLight.specular);
+        // point
+        cubeShader.setVec3("pointLight.position", pointLight.position);
+        cubeShader.setVec3("pointLight.direction", pointLight.direction);
+        cubeShader.setVec3("pointLight.ambient", pointLight.ambient);
+        cubeShader.setVec3("pointLight.diffuse", pointLight.diffuse);
+        cubeShader.setVec3("pointLight.specular", pointLight.specular);
+        cubeShader.setFloat("pointLight.constant", pointLight.constant);
+        cubeShader.setFloat("pointLight.linear", pointLight.linear);
+        cubeShader.setFloat("pointLight.quadratic", pointLight.quadratic);
         // updating the view and projection matrices
         glm::mat4 view = glm::mat4(1.f);
         view = camera.getViewMatrix();
@@ -166,6 +207,8 @@ int main()
         {
             model = glm::mat4(1.f);
             model = glm::translate(model, cubePositions[i]);
+            if (i == n-1)
+                model = glm::scale(model, glm::vec3(.3f));
             cubeShader.setVec3("color", cubeColors[i]);
             cubeShader.setMat4("model", model);
             // binding the vertex array and drawing

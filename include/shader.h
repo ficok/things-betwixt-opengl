@@ -92,6 +92,11 @@ public:
         glUniform3fv(glGetUniformLocation(_programID, name.c_str()), 1, &vector[0]);
     }
 
+    void setFloat(const std::string& name, const float value)
+    const {
+        glUniform1f(glGetUniformLocation(_programID, name.c_str()), value);
+    }
+
     // methods
     void activate()
     const {

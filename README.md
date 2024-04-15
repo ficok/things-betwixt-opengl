@@ -14,7 +14,7 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 | Camera looking               | Working | Done     |
 | Model loading                | None    | None     |
 | Point lighting               | None    | None     |
-| Directional lighting         | None    | None     |
+| Directional lighting         | Working | Done     |
 | Spotlight                    | None    | None     |
 | Advanced lighting            | None    | None     |
 | Blending                     | None    | None     |
@@ -35,7 +35,8 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 - [x] some keyboard actions (such as exiting) (14.04.2024.)
 - [ ] various callback functions
 - [ ] skybox
-- [ ] directional light
-- [ ] point light
+- [x] directional light
+- [x] point light
 - [ ] spotlight with toggle
+- [ ] specular component doesn't seem to be working
 - [ ] reworking the model with fireflies and 'water'
