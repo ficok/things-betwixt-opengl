@@ -6,6 +6,7 @@
 #include <glad/glad.h>
 
 #include <utils.h>
+#include <structures.h>
 
 class Shader
 {
@@ -79,6 +80,27 @@ public:
         // cleanup
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
+    }
+
+    // setting uniform structs
+    void setDirectionalLight(const std::string& name, DirectionalLight& directionalLight)
+    {
+        this->setVec3(name + ".direction", directionalLight.direction);
+        this->setVec3(name + ".ambient", directionalLight.ambient);
+        this->setVec3(name + ".diffuse", directionalLight.diffuse);
+        this->setVec3(name + ".specular", directionalLight.specular);
+    }
+
+    void setPointLight(const std::string& name, PointLight& pointLight)
+    {
+        this->setVec3(name + ".position", pointLight.position);
+        this->setVec3(name + ".direction", pointLight.direction);
+        this->setVec3(name + ".ambient", pointLight.ambient);
+        this->setVec3(name + ".diffuse", pointLight.diffuse);
+        this->setVec3(name + ".specular", pointLight.specular);
+        this->setFloat(name + ".constant", pointLight.constant);
+        this->setFloat(name + ".linear", pointLight.linear);
+        this->setFloat(name + ".quadratic", pointLight.quadratic);
     }
 
     // setting uniforms

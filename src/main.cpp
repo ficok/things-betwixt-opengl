@@ -143,19 +143,10 @@ int main()
         // TODO: create functions in shader that do this by passing the reference to the struct instance
         // sending light information to shader
         // directional
-        cubeShader.setVec3("directionalLight.direction", directionalLight.direction);
-        cubeShader.setVec3("directionalLight.ambient", directionalLight.ambient);
-        cubeShader.setVec3("directionalLight.diffuse", directionalLight.diffuse);
-        cubeShader.setVec3("directionalLight.specular", directionalLight.specular);
+        cubeShader.setDirectionalLight("directionalLight", directionalLight);
         // point
-        cubeShader.setVec3("pointLight.position", pointLight.position);
-        cubeShader.setVec3("pointLight.direction", pointLight.direction);
-        cubeShader.setVec3("pointLight.ambient", pointLight.ambient);
-        cubeShader.setVec3("pointLight.diffuse", pointLight.diffuse);
-        cubeShader.setVec3("pointLight.specular", pointLight.specular);
-        cubeShader.setFloat("pointLight.constant", pointLight.constant);
-        cubeShader.setFloat("pointLight.linear", pointLight.linear);
-        cubeShader.setFloat("pointLight.quadratic", pointLight.quadratic);
+        cubeShader.setPointLight("pointLight", pointLight);
+
         // updating the view and projection matrices
         glm::mat4 view = glm::mat4(1.f);
         view = camera.getViewMatrix();
