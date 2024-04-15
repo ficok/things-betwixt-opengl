@@ -83,7 +83,7 @@ int main()
         glm::vec3(.0f, .0f, 3.f),
         glm::vec3(.0f, .0f, -3.f),
 
-        glm::vec3(6.f)
+        glm::vec3(6.f, .0f, .0f)
     };
     // cube colors
     std::vector<glm::vec3> cubeColors =
@@ -112,7 +112,7 @@ int main()
 
     PointLight pointLight =
     {
-        glm::vec3(6.f),
+        glm::vec3(4.f, .0f, .0f),
         glm::vec3(.0f),
 
         glm::vec3(.1f),
@@ -120,6 +120,19 @@ int main()
         glm::vec3(1.f),
 
         1.f, .09f, .032f
+    };
+
+    Spotlight spotlight =
+    {
+        camera._position,
+        camera._front,
+
+        glm::vec3(.0f),
+        glm::vec3(1.f),
+        glm::vec3(1.f),
+
+        1.f, .09f, .032f,
+        glm::cos(glm::radians(5.f)), glm::cos(glm::radians(8.f))
     };
 
     // render loop
@@ -142,10 +155,11 @@ int main()
         cubeShader.setVec3("viewPosition", camera._position);
         // TODO: create functions in shader that do this by passing the reference to the struct instance
         // sending light information to shader
-        // directional
         cubeShader.setDirectionalLight("directionalLight", directionalLight);
-        // point
         cubeShader.setPointLight("pointLight", pointLight);
+        spotlight.position = camera._position;
+        spotlight.direction = camera._front;
+        cubeShader.setSpotlight("spotlight", spotlight);
 
         // updating the view and projection matrices
         glm::mat4 view = glm::mat4(1.f);

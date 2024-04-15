@@ -23,9 +23,27 @@ struct PointLight
     float linear;
     float quadratic;
 };
+
+struct Spotlight
+{
+    vec3 position;
+    vec3 direction;
+
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+
+    float constant;
+    float linear;
+    float quadratic;
+
+    float cutoff;
+    float outerCutoff;
+};
 // function declarations
 vec3 calculateDirectional(DirectionalLight directionalLight, vec3 normal, vec3 viewDirection);
 vec3 calculatePoint(PointLight pointLight, vec3 normal, vec3 viewDirection, vec3 fragmentPosition);
+vec3 calculateSpotlight(Spotlight spotlight, vec3 normal, vec3 viewDirection, vec3 fragmentPosition);
 // in variables
 in vec3 Normal;
 in vec3 FragmentPosition;
@@ -34,6 +52,7 @@ uniform vec3 viewPosition;
 uniform vec3 color;
 uniform DirectionalLight directionalLight;
 uniform PointLight pointLight;
+uniform Spotlight spotlight;
 
 void main()
 {
@@ -41,8 +60,9 @@ void main()
     vec3 viewDirection = normalize(viewPosition - FragmentPosition);
 
     vec3 result = vec3(0.0f, 0.0f, 0.0f);
-    result += calculateDirectional(directionalLight, normal, viewDirection);
+//    result += calculateDirectional(directionalLight, normal, viewDirection);
     result += calculatePoint(pointLight, normal, viewDirection, FragmentPosition);
+//    result += calculateSpotlight(spotlight, normal, viewDirection, FragmentPosition);
 
     FragColor = vec4(result, 1.0f);
 }
@@ -67,13 +87,13 @@ vec3 calculateDirectional(DirectionalLight light, vec3 normal, vec3 viewDirectio
 
 vec3 calculatePoint(PointLight light, vec3 normal, vec3 viewDirection, vec3 fragmentPosition)
 {
-    // light direction vector that originates in the fragment
+    // direction of the light from the perspective of the fragment
     vec3 lightDirection = normalize(light.position - fragmentPosition);
     // calculating the diffuse factor
     float diffuseFactor = max(dot(normal, lightDirection), .0f);
     // calculating the specular factor
-    vec3 reflectionDirection = reflect(-light.direction, normal);
-    float specularFactor = pow(max(dot(reflectionDirection, normal), .0f), 32.f);
+    vec3 reflectionDirection = reflect(-lightDirection, normal);
+    float specularFactor = pow(max(dot(viewDirection, reflectionDirection), .0f), 32.f);
     // calculating attenuation
     float distance = length(light.position - fragmentPosition);
     float attenuation = 1.f / (light.constant + light.linear * distance + light.quadratic * distance * distance);
@@ -81,6 +101,39 @@ vec3 calculatePoint(PointLight light, vec3 normal, vec3 viewDirection, vec3 frag
     vec3 ambient = light.ambient * color * attenuation;
     vec3 diffuse = light.diffuse * diffuseFactor * color * attenuation;
     vec3 specular = light.specular * specularFactor * color * attenuation;
+
+    return ambient + diffuse + specular;
+}
+
+vec3 calculateSpotlight(Spotlight light, vec3 normal, vec3 viewDirection, vec3 fragmentPosition)
+{
+    // direction of the light from the perspective of the fragment
+    vec3 lightDirection = normalize(light.position - fragmentPosition);
+    // calculating the diffuse factor
+    float diffuseFactor = max(dot(normal, lightDirection), 0.0);
+    // calculating the specular factor
+    vec3 reflectionDirection = reflect(-lightDirection, normal);
+    float specularFactor = pow(max(dot(viewDirection, reflectionDirection), 0.0), 32.f);
+    // attenuation
+    float distance = length(light.position - fragmentPosition);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+    // spotlight intensity
+    float theta = dot(lightDirection, normalize(-light.direction));
+    float epsilon = light.cutoff - light.outerCutoff;
+    float A = (theta - light.outerCutoff) / epsilon;
+    float intensity = A;
+    if (A < 0.0f)
+        intensity = 0.0f;
+    if (A > 1.0f)
+        intensity = 1.0f;
+    // calculating the light components
+    vec3 ambient = light.ambient * color;
+    vec3 diffuse = light.diffuse * diffuseFactor * color;
+    vec3 specular = light.specular * specularFactor * color;
+
+    ambient *= attenuation * intensity;
+    diffuse *= attenuation * intensity;
+    specular *= attenuation * intensity;
 
     return ambient + diffuse + specular;
 }

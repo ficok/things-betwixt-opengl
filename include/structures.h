@@ -39,4 +39,21 @@ struct PointLight
     float quadratic;
 };
 
+struct Spotlight
+{
+    glm::vec3 position;
+    glm::vec3 direction;
+
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
+
+    float constant;
+    float linear;
+    float quadratic;
+
+    float cutoff;
+    float outerCutoff;
+};
+
 #endif //THINGSBETWIXT_STRUCTURES_H

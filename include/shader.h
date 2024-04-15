@@ -103,6 +103,20 @@ public:
         this->setFloat(name + ".quadratic", pointLight.quadratic);
     }
 
+    void setSpotlight(const std::string& name, Spotlight& spotlight)
+    {
+        this->setVec3(name + ".position", spotlight.position);
+        this->setVec3(name + ".direction", spotlight.direction);
+        this->setVec3(name + ".ambient", spotlight.ambient);
+        this->setVec3(name + ".diffuse", spotlight.diffuse);
+        this->setVec3(name + ".specular", spotlight.specular);
+        this->setFloat(name + ".constant", spotlight.constant);
+        this->setFloat(name + ".linear", spotlight.linear);
+        this->setFloat(name + ".quadratic", spotlight.quadratic);
+        this->setFloat(name + "cutoff", spotlight.cutoff);
+        this->setFloat(name + "outerCutoff", spotlight.outerCutoff);
+    }
+
     // setting uniforms
     void setMat4(const std::string& name, glm::mat4& matrix)
     const {

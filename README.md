@@ -7,20 +7,20 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 ## Where I got my resources
 
 ## Progress
-| Functionality                | Status  | Progress |
-|------------------------------|---------|----------|
-| Shader compiling and linking | Working | Done     |
-| Camera movement              | Working | Done     |
-| Camera looking               | Working | Done     |
-| Model loading                | None    | None     |
-| Point lighting               | None    | None     |
-| Directional lighting         | Working | Done     |
-| Spotlight                    | None    | None     |
-| Advanced lighting            | None    | None     |
-| Blending                     | None    | None     |
-| Face culling                 | None    | None     |
-| Skybox                       | None    | None     |
-| Bloom                        | None    | None     |
+| Functionality                | Status  | Progress    |
+|------------------------------|---------|-------------|
+| Shader compiling and linking | Working | Done        |
+| Camera movement              | Working | Done        |
+| Camera looking               | Working | Done        |
+| Model loading                | None    | None        |
+| Point lighting               | Working | Done        |
+| Directional lighting         | Working | Done        |
+| Spotlight                    | Broken  | In progress |
+| Advanced lighting            | None    | None        |
+| Blending                     | None    | None        |
+| Face culling                 | None    | None        |
+| Skybox                       | None    | None        |
+| Bloom                        | None    | None        |
 
 ## To-do
 - [ ] finish this README
