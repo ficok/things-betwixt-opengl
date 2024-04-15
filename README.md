@@ -7,20 +7,20 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 ## Where I got my resources
 
 ## Progress
-| Functionality                | Status  | Progress    |
-|------------------------------|---------|-------------|
-| Shader compiling and linking | Working | Done        |
-| Camera movement              | Working | Done        |
-| Camera looking               | Working | Done        |
-| Model loading                | None    | None        |
-| Point lighting               | Working | Done        |
-| Directional lighting         | Working | Done        |
-| Spotlight                    | Broken  | In progress |
-| Advanced lighting            | None    | None        |
-| Blending                     | None    | None        |
-| Face culling                 | None    | None        |
-| Skybox                       | None    | None        |
-| Bloom                        | None    | None        |
+| Functionality                | Status  | Progress    | Comment                                |
+|------------------------------|---------|-------------|----------------------------------------|
+| Shader compiling and linking | Working | Done        | -                                      |
+| Camera movement              | Working | Done        | -                                      |
+| Camera looking               | Working | Done        | -                                      |
+| Model loading                | None    | None        | -                                      |
+| Point lighting               | Working | Done        | -                                      |
+| Directional lighting         | Working | Done        | -                                      |
+| Spotlight                    | Broken  | In progress | Shines everywhere instead of in a cone |
+| Advanced lighting            | None    | None        | -                                      |
+| Blending                     | None    | None        | -                                      |
+| Face culling                 | None    | None        | -                                      |
+| Skybox                       | None    | None        | -                                      |
+| Bloom                        | None    | None        | -                                      |
 
 ## To-do
 - [ ] finish this README
@@ -34,9 +34,9 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 - [ ] info logs
 - [x] some keyboard actions (such as exiting) (14.04.2024.)
 - [ ] various callback functions
-- [ ] skybox
-- [x] directional light
-- [x] point light
-- [ ] spotlight with toggle
-- [ ] specular component doesn't seem to be working
+- [x] directional light (15.04.2024.)
+- [x] point light (15.04.2024.)
+- [ ] spotlight with toggle (need to fix it)
+
+*Later on*
 - [ ] reworking the model with fireflies and 'water'
