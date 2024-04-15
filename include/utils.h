@@ -6,13 +6,15 @@
 #include <sstream>
 #include <vector>
 
+// ignore warnings about unused parameters
+#define UNUSED(x)(void)x
+
 namespace utils {
-#define  UNUSED(x)(void)x
     // declarations
-    std::string readFile(std::string path);
+    std::string readFile(const std::string& path);
 
     // definitions
-    std::string readFile(std::string path) {
+    std::string readFile(const std::string& path) {
         std::ifstream in(path);
         std::stringstream buffer;
         buffer << in.rdbuf();

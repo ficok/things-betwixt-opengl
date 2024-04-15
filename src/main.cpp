@@ -6,48 +6,11 @@
 #include <utils.h>
 #include <shader.h>
 #include <camera.h>
+#include <structures.h>
 
 #define S_WIDTH  2000
 #define S_HEIGHT 1500
 #define TITLE "Things betwixt"
-
-// TODO: move structure definitions into utils.h
-// structure definitions
-struct Mouse
-{
-    double lastX;
-    double lastY;
-    bool firstMovement;
-};
-
-struct Frame
-{
-    double delta;
-    double last;
-    double current;
-};
-
-struct DirectionalLight
-{
-    glm::vec3 direction;
-    glm::vec3 ambient;
-    glm::vec3 diffuse;
-    glm::vec3 specular;
-};
-
-struct PointLight
-{
-    glm::vec3 position;
-    glm::vec3 direction;
-
-    glm::vec3 ambient;
-    glm::vec3 diffuse;
-    glm::vec3 specular;
-
-    float constant;
-    float linear;
-    float quadratic;
-};
 
 // function declarations
 void processInput(GLFWwindow* window);
