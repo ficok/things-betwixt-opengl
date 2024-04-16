@@ -60,9 +60,9 @@ void main()
     vec3 viewDirection = normalize(viewPosition - FragmentPosition);
 
     vec3 result = vec3(0.0f, 0.0f, 0.0f);
-//    result += calculateDirectional(directionalLight, normal, viewDirection);
-    result += calculatePoint(pointLight, normal, viewDirection, FragmentPosition);
-//    result += calculateSpotlight(spotlight, normal, viewDirection, FragmentPosition);
+    // result += calculateDirectional(directionalLight, normal, viewDirection);
+    // result += calculatePoint(pointLight, normal, viewDirection, FragmentPosition);
+    result += calculateSpotlight(spotlight, normal, viewDirection, FragmentPosition);
 
     FragColor = vec4(result, 1.0f);
 }
@@ -120,12 +120,8 @@ vec3 calculateSpotlight(Spotlight light, vec3 normal, vec3 viewDirection, vec3 f
     // spotlight intensity
     float theta = dot(lightDirection, normalize(-light.direction));
     float epsilon = light.cutoff - light.outerCutoff;
-    float A = (theta - light.outerCutoff) / epsilon;
-    float intensity = A;
-    if (A < 0.0f)
-        intensity = 0.0f;
-    if (A > 1.0f)
-        intensity = 1.0f;
+    float intensity = clamp((theta - light.outerCutoff)/epsilon, 0.0f, 1.0f);
+
     // calculating the light components
     vec3 ambient = light.ambient * color;
     vec3 diffuse = light.diffuse * diffuseFactor * color;

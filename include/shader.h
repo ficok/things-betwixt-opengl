@@ -113,8 +113,8 @@ public:
         this->setFloat(name + ".constant", spotlight.constant);
         this->setFloat(name + ".linear", spotlight.linear);
         this->setFloat(name + ".quadratic", spotlight.quadratic);
-        this->setFloat(name + "cutoff", spotlight.cutoff);
-        this->setFloat(name + "outerCutoff", spotlight.outerCutoff);
+        this->setFloat(name + ".cutoff", spotlight.cutoff);
+        this->setFloat(name + ".outerCutoff", spotlight.outerCutoff);
     }
 
     // setting uniforms

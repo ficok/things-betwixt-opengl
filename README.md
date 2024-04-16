@@ -36,7 +36,8 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 - [ ] various callback functions
 - [x] directional light (15.04.2024.)
 - [x] point light (15.04.2024.)
-- [ ] spotlight with toggle (need to fix it)
+- [ ] spotlight direction issue (16.04.2024.)
+- [ ] spotlight toggle
 
 *Later on*
 - [ ] reworking the model with fireflies and 'water'

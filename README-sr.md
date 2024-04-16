@@ -36,7 +36,8 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 - [ ] razne callback funkcije
 - [x] directional osvetljenje (15.04.2024.)
 - [x] point osvetljenje (15.04.2024.)
-- [ ] spotlight sa paljenjem i gasenjem (treba popraviti)
+- [ ] problem smera svetlosti kod spotlight-a (16.04.2024.)
+- [ ] paljenje i gasenje spotlight-a
 
 *Kasnije*
 - [ ] doradjivanje modela sa svicima i 'vodom'
