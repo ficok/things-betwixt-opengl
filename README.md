@@ -7,20 +7,20 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 ## Where I got my resources
 
 ## Progress
-| Functionality                | Status  | Progress    | Comment                                |
-|------------------------------|---------|-------------|----------------------------------------|
-| Shader compiling and linking | Working | Done        | -                                      |
-| Camera movement              | Working | Done        | -                                      |
-| Camera looking               | Working | Done        | -                                      |
-| Model loading                | None    | None        | -                                      |
-| Point lighting               | Working | Done        | -                                      |
-| Directional lighting         | Working | Done        | -                                      |
-| Spotlight                    | Broken  | In progress | Shines everywhere instead of in a cone |
-| Advanced lighting            | None    | None        | -                                      |
-| Blending                     | None    | None        | -                                      |
-| Face culling                 | None    | None        | -                                      |
-| Skybox                       | None    | None        | -                                      |
-| Bloom                        | None    | None        | -                                      |
+| Functionality                | Status  | Progress    | Comment |
+|------------------------------|---------|-------------|---------|
+| Shader compiling and linking | Working | Done        | -       |
+| Camera movement              | Working | Done        | -       |
+| Camera looking               | Working | Done        | -       |
+| Model loading                | None    | None        | -       |
+| Point lighting               | Working | Done        | -       |
+| Directional lighting         | Working | Done        | -       |
+| Spotlight                    | Working | In progress | -       |
+| Advanced lighting            | None    | None        | -       |
+| Blending                     | None    | None        | -       |
+| Face culling                 | None    | None        | -       |
+| Skybox                       | None    | None        | -       |
+| Bloom                        | None    | None        | -       |
 
 ## To-do
 - [ ] finish this README
