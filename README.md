@@ -30,14 +30,18 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 - [x] movement (14.04.2024.)
 - [x] shader class, some uniform sets undefined (14.04.2024.)
 - [x] camera class (14.04.2024.)
-- [x] error handling
-- [x] info logs
+- [x] error handling (16.04.2024.)
+- [x] info logs (16.04.2024.)
 - [x] some keyboard actions (such as exiting) (14.04.2024.)
 - [x] various callback functions
 - [x] directional light (15.04.2024.)
 - [x] point light (15.04.2024.)
 - [x] spotlight direction issue (16.04.2024.)
 - [x] spotlight toggle (16.04.2024.)
+- [x] more keyboard actions (inc/decr speed, sensitivity, toggle x/y axis inversion...) (16.04.2024.)
+- [ ] face culling
+- [ ] blending
+- [ ] advanced lighting
 
 *Later on*
 - [ ] reworking the model with fireflies and 'water'

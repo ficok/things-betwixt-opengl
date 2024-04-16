@@ -129,8 +129,8 @@ int main()
 
     Spotlight spotlight =
     {
-        camera._position,
-        camera._front,
+        camera.position(),
+        camera.front(),
 
         glm::vec3(.0f),
         glm::vec3(1.f),
@@ -164,8 +164,8 @@ int main()
         // sending light information to shader
         cubeShader.setDirectionalLight("directionalLight", directionalLight);
         cubeShader.setPointLight("pointLight", pointLight);
-        spotlight.position = camera._position;
-        spotlight.direction = camera._front;
+        spotlight.position = camera.position();
+        spotlight.direction = camera.front();
         spotlight.on = flashlightOn;
         cubeShader.setSpotlight("spotlight", spotlight);
 
@@ -264,4 +264,23 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         flashlightOn = !flashlightOn;
         std::cout << "INFO: flashlight turned " << (flashlightOn ? "on\n" : "off\n");
     }
+
+    // movement speed
+    if (key == GLFW_KEY_EQUAL && action == GLFW_PRESS)
+        camera.updateMovementSpeed(2.f);
+    if (key == GLFW_KEY_MINUS && action == GLFW_PRESS)
+        camera.updateMovementSpeed(-2.f);
+
+    // mouse sensitivity
+    if (key == GLFW_KEY_LEFT_BRACKET && action == GLFW_PRESS)
+        camera.updateMouseSensitivity(-.1f);
+    if (key == GLFW_KEY_RIGHT_BRACKET && action == GLFW_PRESS) {
+        camera.updateMouseSensitivity(.1f);
+    }
+
+    // invert axis
+    if (key == GLFW_KEY_X && action == GLFW_PRESS)
+        camera.invertAxis('x');
+    if (key == GLFW_KEY_Z && action == GLFW_PRESS)
+        camera.invertAxis('y');
 }

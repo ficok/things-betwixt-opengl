@@ -30,14 +30,18 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 - [x] kretanje (14.04.2024.)
 - [x] shader klasa, preostala neka postavljanja uniformnih (14.04.2024.)
 - [x] camera klasa (14.04.2024.)
-- [ ] rukovanje greskama
-- [ ] info logovi
+- [x] rukovanje greskama (16.04.2024.)
+- [x] info logovi (16.04.2024.)
 - [x] neke akcije na tastaturi (poput gasenja) (14.04.2024.)
-- [ ] razne callback funkcije
+- [x] razne callback funkcije
 - [x] directional osvetljenje (15.04.2024.)
 - [x] point osvetljenje (15.04.2024.)
 - [x] problem smera svetlosti kod spotlight-a (16.04.2024.)
 - [x] paljenje i gasenje spotlight-a (16.04.2024.)
+- [x] jos akcija na tastaturi (+/- brzina, osetljivost, inverzija x/y pogleda...)
+- [ ] face culling
+- [ ] blending
+- [ ] advanced lighting
 
 *Kasnije*
 - [ ] doradjivanje modela sa svicima i 'vodom'

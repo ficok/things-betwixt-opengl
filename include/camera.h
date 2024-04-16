@@ -21,6 +21,8 @@ public:
     float _zoom;
     float _speed;
     float _mouseSensitivity;
+    bool _invertXaxis;
+    bool _invertYaxis;
     // euler angles
     float _yaw;
     float _pitch;
@@ -36,9 +38,11 @@ public:
     {
         _zoom = zoom;
         _speed = speed;
+        _mouseSensitivity = mouseSensitivity;
+        _invertXaxis = false;
+        _invertYaxis = false;
         _yaw = yaw;
         _pitch = pitch;
-        _mouseSensitivity = mouseSensitivity;
         _front = glm::vec3(.0f, .0f, -1.f);
 
         _position = position;
@@ -79,21 +83,13 @@ public:
         }
     }
     // TODO: comments
-    void updateCameraView(double xoffset, double yoffset, bool invertAxis = false)
+    void updateCameraView(double xoffset, double yoffset)
     {
         xoffset *= _mouseSensitivity;
         yoffset *= _mouseSensitivity;
 
-        if (invertAxis)
-        {
-            _yaw -= xoffset;
-            _pitch -= yoffset;
-        }
-        else
-        {
-            _yaw += xoffset;
-            _pitch += yoffset;
-        }
+        _yaw += (float)(_invertXaxis ? -xoffset : xoffset);
+        _pitch += (float)(_invertYaxis ? -yoffset : yoffset);
 
         if (_pitch > 89.f) _pitch = 89.f;
         if (_pitch < -89.f) _pitch = -89.f;
@@ -109,14 +105,55 @@ public:
         if (_zoom > 45.f) _zoom = 45.f;
     }
 
+    void updateMovementSpeed(float value)
+    {
+        if (_speed + value < 2.f || _speed + value > 40.f)
+            return;
+
+        _speed += value;
+        std::cout << "INFO [camera]: movement speed: " << _speed << "\n";
+    }
+
+    void updateMouseSensitivity(float value)
+    {
+        if (_mouseSensitivity + value < .1f || _mouseSensitivity + value > .6f)
+            return;
+
+        _mouseSensitivity += value;
+        std::cout << "INFO [camera]: mouse sensitivity: " << _mouseSensitivity << "\n";
+    }
+
+    void invertAxis(char which)
+    {
+        if (which == 'x') {
+            std::cout << "INFO [camera]: X axis " << (_invertXaxis ? "not inverted\n" : "inverted\n");
+            _invertXaxis = !_invertXaxis;
+        }
+        else {
+            std::cout << "INFO [camera]: Y axis " << (_invertYaxis ? "not inverted\n" : "inverted\n");
+            _invertYaxis = !_invertYaxis;
+        }
+    }
+
     glm::mat4 getViewMatrix()
     const {
         return glm::lookAt(_position, _position + _front, _up);
     }
 
+    // get functions
     float fov()
     const {
         return _zoom;
+    }
+
+    glm::vec3 position()
+    const {
+        return _position;
+    }
+
+    glm::vec3 front()
+    const {
+        return _front;
     }
 
     void printCameraInfo()
