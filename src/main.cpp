@@ -7,6 +7,7 @@
 #include <shader.h>
 #include <camera.h>
 #include <structures.h>
+#include <errors.h>
 
 #define S_WIDTH  2000
 #define S_HEIGHT 1500
@@ -19,11 +20,13 @@ void processInput(GLFWwindow* window);
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 void mouseCallback(GLFWwindow* window, double xpos, double ypos);
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 // global variables
 Camera camera(glm::vec3(.0f, .0f, .0f));
 Frame frame = {.0f, .0f, .0f};
 Mouse mouse = {(double)S_WIDTH/2, (double)S_HEIGHT/2, true};
+bool flashlightOn = false;
 
 int main()
 {
@@ -35,16 +38,18 @@ int main()
     // glfw window creation
     // TODO: error handling
     GLFWwindow* window = glfwCreateWindow(S_WIDTH, S_HEIGHT, TITLE, nullptr, nullptr);
+    assert(window, "ERROR [main]: window creation failed.");
     glfwMakeContextCurrent(window);
 
     // GLAD: loading all opengl function pointers
     // TODO: error handling
-    gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
+    assert(gladLoadGLLoader((GLADloadproc) glfwGetProcAddress), "ERROR [main]: failed to initialize GLAD.");
 
     // configuring callback functions
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
     glfwSetCursorPosCallback(window, mouseCallback);
     glfwSetScrollCallback(window, scrollCallback);
+    glfwSetKeyCallback(window, keyCallback);
 
     // capture cursor
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -99,7 +104,7 @@ int main()
     };
 
     // creating a shader program
-    Shader cubeShader("resources/shaders/vertex.vs", "resources/shaders/fragment.fs", "cube");
+    Shader cubeShader("vertex.vs", "fragment.fs", "cube");
 
     // initializing the light
     DirectionalLight directionalLight =
@@ -132,7 +137,9 @@ int main()
         glm::vec3(1.f),
 
         1.f, .09f, .032f,
-        glm::cos(glm::radians(5.f)), glm::cos(glm::radians(8.f))
+        glm::cos(glm::radians(5.f)),
+        glm::cos(glm::radians(20.f)),
+        flashlightOn
     };
 
     // render loop
@@ -159,6 +166,7 @@ int main()
         cubeShader.setPointLight("pointLight", pointLight);
         spotlight.position = camera._position;
         spotlight.direction = camera._front;
+        spotlight.on = flashlightOn;
         cubeShader.setSpotlight("spotlight", spotlight);
 
         // updating the view and projection matrices
@@ -170,7 +178,7 @@ int main()
         cubeShader.setMat4("projection", projection);
         // drawing
         glm::mat4 model;
-        int n = cubePositions.size();
+        auto n = (int)cubePositions.size();
         for (int i = 0; i < n; ++i)
         {
             model = glm::mat4(1.f);
@@ -244,7 +252,16 @@ void mouseCallback(GLFWwindow* window, double xpos, double ypos)
 
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    UNUSED(window);
-    UNUSED(xoffset);
+    UNUSED(window); UNUSED(xoffset);
     camera.updateFOV(yoffset);
+}
+
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    UNUSED(window); UNUSED(scancode); UNUSED(mods);
+    // toggle flashlight
+    if (key == GLFW_KEY_F && action == GLFW_PRESS) {
+        flashlightOn = !flashlightOn;
+        std::cout << "INFO: flashlight turned " << (flashlightOn ? "on\n" : "off\n");
+    }
 }

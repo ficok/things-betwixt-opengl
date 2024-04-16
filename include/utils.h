@@ -12,6 +12,8 @@
 namespace utils {
     // declarations
     std::string readFile(const std::string& path);
+    std::string shadersDir(const std::string& path);
+    std::string objectsDir(const std::string& path);
 
     // definitions
     std::string readFile(const std::string& path) {
@@ -19,6 +21,16 @@ namespace utils {
         std::stringstream buffer;
         buffer << in.rdbuf();
         return buffer.str();
+    }
+
+    std::string shadersDir(const std::string& path)
+    {
+        return "resources/shaders/" + path;
+    }
+
+    std::string objectsDir(const std::string& path)
+    {
+        return "resources/objects/" + path;
     }
 
     // useful data

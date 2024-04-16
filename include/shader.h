@@ -7,6 +7,7 @@
 
 #include <utils.h>
 #include <structures.h>
+#include <errors.h>
 
 class Shader
 {
@@ -14,69 +15,61 @@ public:
     unsigned _programID;
     std::string _programName;
     // constructor
-    /*
-     * TODO 1: print info
-     * TODO 2: create an info printing abstraction
-    */
-    Shader(const std::string& vertexPath, const std::string& fragmentPath, const std::string& name)
+    Shader(const std::string& _vertexPath, const std::string& _fragmentPath, const std::string& name)
     {
+        std::cout << "INFO [shader]\n";
+        // appending source folder
+        std::string vertexPath = utils::shadersDir(_vertexPath);
+        std::string fragmentPath = utils::shadersDir(_fragmentPath);
+
         _programName = name;
         // getting shader source code
-        // TODO: check for empty source and exit program
         std::string vertexShaderString = utils::readFile(vertexPath);
         const char* vertexShaderSource = vertexShaderString.c_str();
         std::string fragmentShaderString = utils::readFile(fragmentPath);
         const char* fragmentShaderSource = fragmentShaderString.c_str();
-
+        // asserting we have the right files
+        assert(!vertexShaderString.empty(), "ERROR [vertex shader: " + vertexPath + "] is empty!");
+        assert(!fragmentShaderString.empty(), "ERROR [fragment shader: " + fragmentPath + "] is empty!");
         // creating the vertex shader
         int vertexShader = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
         glCompileShader(vertexShader);
-        std::cout << "INFO [vertex shader: " << vertexPath <<"]: compiling..." << std::endl;
+        std::cout << "INFO [vertex shader: " << vertexPath <<"]: compiling...\n";
         // checking for errors
         int success;
         char infoLog[512];
         glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-        if (!success)
-        {
-            glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
-            std::cerr << "ERROR [vertex shader]: compilation failed!\n"
-            << "- vertex shader path: " << vertexPath << "\n- info log:\n" << infoLog << std::endl;
-        }
+        glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
+        assert(success, "ERROR [vertex shader]: compilation failed!\n- vertex shader path: "
+            + vertexPath + "\n- info log:\n" + infoLog + "\n");
 
-        std::cout << "INFO [vertex shader: " << vertexPath <<"]: done!" << std::endl;
+        std::cout << "INFO [vertex shader: " << vertexPath <<"]: done!\n";
         // creating the fragment shader
         int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
         glCompileShader(fragmentShader);
-        std::cout << "INFO [fragment shader: " << fragmentPath <<"]: compiling..." << std::endl;
+        std::cout << "INFO [fragment shader: " << fragmentPath <<"]: compiling...\n";
         // checking for errors
         glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-        if (!success)
-        {
-            glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
-            std::cerr << "ERROR [fragment shader]: compilation failed!\n"
-            << "- fragment shader path: " << fragmentPath << "\n- info log:\n" << infoLog << std::endl;
-        }
-        std::cout << "INFO [fragment shader: " << fragmentPath <<"]: done!" << std::endl;
+        glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
+        assert(success, "ERROR [fragment shader]: compilation failed!\n- fragment shader path: "
+            + fragmentPath + "\n- info log:\n" + infoLog + "\n");
+        std::cout << "INFO [fragment shader: " << fragmentPath <<"]: done!\n";
 
         // linking shaders into shader program
         _programID = glCreateProgram();
-        std::cout << "INFO [shader program: " << _programName << "]: attaching shaders..." << std::endl;
+        std::cout << "INFO [shader program: " << _programName << "]: attaching shaders...\n";
         glAttachShader(_programID, vertexShader);
         glAttachShader(_programID, fragmentShader);
-        std::cout << "INFO [shader program: " << _programName << "]: linking program..." << std::endl;
+        std::cout << "INFO [shader program: " << _programName << "]: linking program...\n";
         glLinkProgram(_programID);
         // checking for errors
         glGetProgramiv(_programID, GL_LINK_STATUS, &success);
-        if (!success)
-        {
-            glGetProgramInfoLog(_programID, 512, nullptr, infoLog);
-            std::cerr << "ERROR [shader program]: linking failed!\n"
-            << "- shader program name: " << _programName << "\n- info log: \n" << infoLog << std::endl;
-        }
-        std::cout << "INFO [shader program: " << _programName << "]: done!" << std::endl
-        << "----------\n\n";
+        glGetProgramInfoLog(_programID, 512, nullptr, infoLog);
+        assert(success, "ERROR [shader program]: linking failed!\n- shader program name: "
+            + _programName + "\n- info log: \n" + infoLog + "\n");
+        std::cout << "INFO [shader program: " << _programName << "]: done!\n----------\n\n";
         // cleanup
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
@@ -115,6 +108,7 @@ public:
         this->setFloat(name + ".quadratic", spotlight.quadratic);
         this->setFloat(name + ".cutoff", spotlight.cutoff);
         this->setFloat(name + ".outerCutoff", spotlight.outerCutoff);
+        this->setBool(name + ".on", spotlight.on);
     }
 
     // setting uniforms
@@ -131,6 +125,11 @@ public:
     void setFloat(const std::string& name, const float value)
     const {
         glUniform1f(glGetUniformLocation(_programID, name.c_str()), value);
+    }
+
+    void setBool(const std::string& name, const bool value)
+    const {
+        glUniform1i(glGetUniformLocation(_programID, name.c_str()), (int)value);
     }
 
     // methods

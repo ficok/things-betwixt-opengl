@@ -46,19 +46,7 @@ public:
         _up = worldUp;
 
         updateCameraVectors();
-        std::cout << "INFO [camera]: initiailization complete:\n"
-        << "- zoom: " << _zoom << std::endl
-        << "- speed: " << _speed << std::endl
-        << "- yaw: " << _yaw << std::endl
-        << "- pitch: " << _pitch << std::endl
-        << "- mouse sensitivity: " << _mouseSensitivity << std::endl
-        << std::endl
-        << "- position: (" << _position.x << ", " << _position.y << ", " << _position.z << ")\n"
-        << "- world up: (" << _worldUp.x << ", " << _worldUp.y << ", " << _worldUp.z << ")\n"
-        << "- up: (" << _up.x << ", " << _up.y << ", " << _up.z << ")\n"
-        << "- right: (" << _right.x << ", " << _right.y << ", " << _right.z << ")\n"
-        << "- front: (" << _front.x << ", " << _front.y << ", " << _front.z << ")\n"
-        << "----------\n\n";
+        printCameraInfo();
     }
     // TODO: comments
     void updateCameraVectors()
@@ -129,6 +117,23 @@ public:
     float fov()
     const {
         return _zoom;
+    }
+
+    void printCameraInfo()
+    {
+
+        std::cout << "INFO [camera]: initiailization complete:\n"
+                  << "- zoom: " << _zoom << "\n"
+                  << "- speed: " << _speed << "\n"
+                  << "- yaw: " << _yaw << "\n"
+                  << "- pitch: " << _pitch << "\n"
+                  << "- mouse sensitivity: " << _mouseSensitivity << "\n\n"
+                  << "- position: (" << _position.x << ", " << _position.y << ", " << _position.z << ")\n"
+                  << "- world up: (" << _worldUp.x << ", " << _worldUp.y << ", " << _worldUp.z << ")\n"
+                  << "- up: (" << _up.x << ", " << _up.y << ", " << _up.z << ")\n"
+                  << "- right: (" << _right.x << ", " << _right.y << ", " << _right.z << ")\n"
+                  << "- front: (" << _front.x << ", " << _front.y << ", " << _front.z << ")\n"
+                  << "----------\n\n";
     }
 };
 

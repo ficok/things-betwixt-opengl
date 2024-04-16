@@ -7,20 +7,20 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 ## Where I got my resources
 
 ## Progress
-| Functionality                | Status  | Progress    | Comment |
-|------------------------------|---------|-------------|---------|
-| Shader compiling and linking | Working | Done        | -       |
-| Camera movement              | Working | Done        | -       |
-| Camera looking               | Working | Done        | -       |
-| Model loading                | None    | None        | -       |
-| Point lighting               | Working | Done        | -       |
-| Directional lighting         | Working | Done        | -       |
-| Spotlight                    | Working | In progress | -       |
-| Advanced lighting            | None    | None        | -       |
-| Blending                     | None    | None        | -       |
-| Face culling                 | None    | None        | -       |
-| Skybox                       | None    | None        | -       |
-| Bloom                        | None    | None        | -       |
+| Functionality                | Status  | Progress | Comment |
+|------------------------------|---------|----------|---------|
+| Shader compiling and linking | Working | Done     | -       |
+| Camera movement              | Working | Done     | -       |
+| Camera looking               | Working | Done     | -       |
+| Model loading                | None    | None     | -       |
+| Point lighting               | Working | Done     | -       |
+| Directional lighting         | Working | Done     | -       |
+| Spotlight                    | Working | Done     | -       |
+| Advanced lighting            | None    | None     | -       |
+| Blending                     | None    | None     | -       |
+| Face culling                 | None    | None     | -       |
+| Skybox                       | None    | None     | -       |
+| Bloom                        | None    | None     | -       |
 
 ## To-do
 - [ ] finish this README
@@ -30,14 +30,14 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 - [x] movement (14.04.2024.)
 - [x] shader class, some uniform sets undefined (14.04.2024.)
 - [x] camera class (14.04.2024.)
-- [ ] error handling
-- [ ] info logs
+- [x] error handling
+- [x] info logs
 - [x] some keyboard actions (such as exiting) (14.04.2024.)
-- [ ] various callback functions
+- [x] various callback functions
 - [x] directional light (15.04.2024.)
 - [x] point light (15.04.2024.)
-- [ ] spotlight direction issue (16.04.2024.)
-- [ ] spotlight toggle
+- [x] spotlight direction issue (16.04.2024.)
+- [x] spotlight toggle (16.04.2024.)
 
 *Later on*
 - [ ] reworking the model with fireflies and 'water'

@@ -54,6 +54,8 @@ struct Spotlight
 
     float cutoff;
     float outerCutoff;
+
+    bool on;
 };
 
 #endif //THINGSBETWIXT_STRUCTURES_H

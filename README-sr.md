@@ -7,20 +7,20 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 ## Odakle sam pozajmio kod
 
 ## Progres
-| Funkcionalnost                  | Status | Progres   | Komentar |
-|---------------------------------|--------|-----------|----------|
-| Shader kompilacija i linkovanje | Radi   | Gotovo    | -        |
-| Camera kretanje                 | Radi   | Gotovo    | -        |
-| Camera gledanje                 | Radi   | Gotovo    | -        |
-| Model ucitavanje                | Nema   | Nema      | -        |
-| Point osvetljenje               | Radi   | Gotovo    | -        |
-| Directional osvetljenje         | Radi   | Gotovo    | -        |
-| Spotlight                       | Radi   | U procesu | -        |
-| Napredno osvetljenje            | Nema   | Nema      | -        |
-| Blending                        | Nema   | Nema      | -        |
-| Face culling                    | Nema   | Nema      | -        |
-| Skybox                          | Nema   | Nema      | -        |
-| Bloom                           | Nema   | Nema      | -        |
+| Funkcionalnost                  | Status | Progres | Komentar |
+|---------------------------------|--------|---------|----------|
+| Shader kompilacija i linkovanje | Radi   | Gotovo  | -        |
+| Camera kretanje                 | Radi   | Gotovo  | -        |
+| Camera gledanje                 | Radi   | Gotovo  | -        |
+| Model ucitavanje                | Nema   | Nema    | -        |
+| Point osvetljenje               | Radi   | Gotovo  | -        |
+| Directional osvetljenje         | Radi   | Gotovo  | -        |
+| Spotlight                       | Radi   | Gotovo  | -        |
+| Napredno osvetljenje            | Nema   | Nema    | -        |
+| Blending                        | Nema   | Nema    | -        |
+| Face culling                    | Nema   | Nema    | -        |
+| Skybox                          | Nema   | Nema    | -        |
+| Bloom                           | Nema   | Nema    | -        |
 
 ## Preostali posao
 - [ ] dovrsi ovaj README
@@ -36,8 +36,8 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 - [ ] razne callback funkcije
 - [x] directional osvetljenje (15.04.2024.)
 - [x] point osvetljenje (15.04.2024.)
-- [ ] problem smera svetlosti kod spotlight-a (16.04.2024.)
-- [ ] paljenje i gasenje spotlight-a
+- [x] problem smera svetlosti kod spotlight-a (16.04.2024.)
+- [x] paljenje i gasenje spotlight-a (16.04.2024.)
 
 *Kasnije*
 - [ ] doradjivanje modela sa svicima i 'vodom'

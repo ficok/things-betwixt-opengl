@@ -39,6 +39,8 @@ struct Spotlight
 
     float cutoff;
     float outerCutoff;
+
+    bool on;
 };
 // function declarations
 vec3 calculateDirectional(DirectionalLight directionalLight, vec3 normal, vec3 viewDirection);
@@ -60,9 +62,10 @@ void main()
     vec3 viewDirection = normalize(viewPosition - FragmentPosition);
 
     vec3 result = vec3(0.0f, 0.0f, 0.0f);
-    // result += calculateDirectional(directionalLight, normal, viewDirection);
-    // result += calculatePoint(pointLight, normal, viewDirection, FragmentPosition);
-    result += calculateSpotlight(spotlight, normal, viewDirection, FragmentPosition);
+    result += calculateDirectional(directionalLight, normal, viewDirection);
+    result += calculatePoint(pointLight, normal, viewDirection, FragmentPosition);
+    if (spotlight.on)
+        result += calculateSpotlight(spotlight, normal, viewDirection, FragmentPosition);
 
     FragColor = vec4(result, 1.0f);
 }
