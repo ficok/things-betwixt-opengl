@@ -125,6 +125,7 @@ int main()
 
     // creating a shader program
     Shader cubeShader("vertex.vs", "fragment.fs", "cube");
+    Shader lightCubeShader("lightCube.vs", "lightCube.fs", "lightCube");
 
     // initializing the light
     DirectionalLight directionalLight =
@@ -205,26 +206,37 @@ int main()
                 glm::perspective(glm::radians(camera.fov()), (float)S_WIDTH/(float)S_HEIGHT, .1f, 100.f);
         cubeShader.setMat4("view", view);
         cubeShader.setMat4("projection", projection);
-        // drawing
+        // drawing cubes
         glm::mat4 model;
-        auto n = (int)cubePositions.size();
-        for (int i = 0; i < n; ++i)
+        glBindVertexArray(cubeVAO);
+        for (int i = 0; i < (int)cubePositions.size()-1; ++i)
         {
             model = glm::mat4(1.f);
             model = glm::translate(model, cubePositions[i]);
-            if (i == n-1)
-                model = glm::scale(model, glm::vec3(.3f));
             cubeShader.setVec3("color", cubeColors[i]);
             cubeShader.setFloat("alpha", 1.f);
             cubeShader.setMat4("model", model);
             // binding the vertex array and drawing
-            glBindVertexArray(cubeVAO);
             glDrawArrays(GL_TRIANGLES, 0, 36);
-            glBindVertexArray(0);
         }
+        glBindVertexArray(0);
+
+        // drawing the light cube
+        lightCubeShader.activate();
+        lightCubeShader.setMat4("view", view);
+        lightCubeShader.setMat4("projection", projection);
+        lightCubeShader.setVec3("color", cubeColors.back());
+        model = glm::mat4(1.f);
+        model = glm::translate(model, cubePositions.back());
+        model = glm::scale(model, glm::vec3(.35f));
+        lightCubeShader.setMat4("model", model);
+        glBindVertexArray(cubeVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
 
         // drawing transparent objects last
-        for (int i = 0; i < transparentCubePositions.size(); ++i)
+        cubeShader.activate();
+        for (int i = 0; i < (int)transparentCubePositions.size(); ++i)
         {
             model = glm::mat4(1.f);
             model = glm::translate(model, transparentCubePositions[i]);
