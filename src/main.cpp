@@ -57,10 +57,12 @@ int main()
 
     // enabling gl tests
     glEnable(GL_DEPTH_TEST);
-
-    // configuring blending
     glEnable(GL_BLEND);
+    glEnable(GL_CULL_FACE);
+
+    // configuring tests
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glCullFace(GL_BACK);
 
     // creating a cube
     // configuring VBO and VAO
@@ -242,7 +244,7 @@ int main()
             model = glm::translate(model, transparentCubePositions[i]);
             model = glm::scale(model, glm::vec3(.5f));
             cubeShader.setVec3("color", transparentCubeColor);
-            cubeShader.setFloat("alpha", .2f);
+            cubeShader.setFloat("alpha", .5f);
             cubeShader.setMat4("model", model);
 
             glBindVertexArray(cubeVAO);
