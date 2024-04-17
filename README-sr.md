@@ -16,7 +16,7 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 | Point osvetljenje               | Radi   | Gotovo   | -                                                   |
 | Directional osvetljenje         | Radi   | Gotovo   | -                                                   |
 | Spotlight                       | Radi   | Gotovo   | -                                                   |
-| Blinn-Phong-v model             | Radi   | Gotovo   | -                                                   |
+| Blinn-Phong-ov model            | Radi   | Gotovo   | -                                                   |
 | Blending                        | Radi   | U izradi | Resenje nije dovoljno elegantno po meni.            |
 | Face culling                    | Radi   | Gotovo   | Izgleda lose jer su verteksi kocke lose definisani. |
 | Skybox                          | Nema   | Nema     | -                                                   |
