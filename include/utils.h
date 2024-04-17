@@ -38,11 +38,11 @@ namespace utils
     void printInfo(const bool blend, const bool cull, const bool blinn, const bool flashlightOn)
     {
         std::cout <<
-            "INFO: default values:\n" <<
-            "INFO: flashlight is " << (flashlightOn ? "on;\n" : "off;\n") <<
-            "INFO: face culling is " << (cull ? "on;\n" : "off;\n") <<
-            "INFO: transparency is " << (blend ? "on;\n" : "off;\n") <<
-            "INFO: using " << (blinn ? "blinn-phong's model.\n" : "phong's model.\n") <<
+            "INFO: default settings:\n" <<
+            "- flashlight is " << (flashlightOn ? "on;\n" : "off;\n") <<
+            "- face culling is " << (cull ? "on;\n" : "off;\n") <<
+            "- transparency is " << (blend ? "on;\n" : "off;\n") <<
+            "- using " << (blinn ? "blinn-phong's model.\n" : "phong's model.\n") <<
             "----------\n\n";
     }
 }
@@ -51,50 +51,50 @@ namespace utils
 namespace data
 {
     float cubeVertices[] =
-            {
-                    // positions
-                    -.5f, .5f, -.5f,
-                    -.5f, -.5f, -.5f,
-                    .5f, -.5f, -.5f,
-                    .5f, -.5f, -.5f,
-                    .5f, .5f, -.5f,
-                    -.5f, .5f, -.5f,
+    {
+        // positions
+        -.5f, .5f, -.5f,
+        -.5f, -.5f, -.5f,
+        .5f, -.5f, -.5f,
+        .5f, -.5f, -.5f,
+        .5f, .5f, -.5f,
+        -.5f, .5f, -.5f,
 
-                    -.5f, -.5f, .5f,
-                    -.5f, -.5f, -.5f,
-                    -.5f, .5f, -.5f,
-                    -.5f, .5f, -.5f,
-                    -.5f, .5f, .5f,
-                    -.5f, -.5f, .5f,
+        -.5f, -.5f, .5f,
+        -.5f, -.5f, -.5f,
+        -.5f, .5f, -.5f,
+        -.5f, .5f, -.5f,
+        -.5f, .5f, .5f,
+        -.5f, -.5f, .5f,
 
-                    .5f, -.5f, -.5f,
-                    .5f, -.5f, .5f,
-                    .5f, .5f, .5f,
-                    .5f, .5f, .5f,
-                    .5f, .5f, -.5f,
-                    .5f, -.5f, -.5f,
+        .5f, -.5f, -.5f,
+        .5f, -.5f, .5f,
+        .5f, .5f, .5f,
+        .5f, .5f, .5f,
+        .5f, .5f, -.5f,
+        .5f, -.5f, -.5f,
 
-                    -.5f, -.5f, .5f,
-                    -.5f, .5f, .5f,
-                    .5f, .5f, .5f,
-                    .5f, .5f, .5f,
-                    .5f, -.5f, .5f,
-                    -.5f, -.5f, .5f,
+        -.5f, -.5f, .5f,
+        -.5f, .5f, .5f,
+        .5f, .5f, .5f,
+        .5f, .5f, .5f,
+        .5f, -.5f, .5f,
+        -.5f, -.5f, .5f,
 
-                    -.5f, .5f, -.5f,
-                    .5f, .5f, -.5f,
-                    .5f, .5f, .5f,
-                    .5f, .5f, .5f,
-                    -.5f, .5f, .5f,
-                    -.5f, .5f, -.5f,
+        -.5f, .5f, -.5f,
+        .5f, .5f, -.5f,
+        .5f, .5f, .5f,
+        .5f, .5f, .5f,
+        -.5f, .5f, .5f,
+        -.5f, .5f, -.5f,
 
-                    -.5f, -.5f, -.5f,
-                    -.5f, -.5f, .5f,
-                    .5f, -.5f, -.5f,
-                    .5f, -.5f, -.5f,
-                    -.5f, -.5f, .5f,
-                    .5f, -.5f, .5f
-            };
+        -.5f, -.5f, -.5f,
+        -.5f, -.5f, .5f,
+        .5f, -.5f, -.5f,
+        .5f, -.5f, -.5f,
+        -.5f, -.5f, .5f,
+        .5f, -.5f, .5f
+    };
     float cubeVerticesWNormalsTextures[] = {
         // positions          // normals           // texture coords
         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
