@@ -7,20 +7,20 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 ## Odakle sam pozajmio kod
 
 ## Progres
-| Funkcionalnost                  | Status | Progres | Komentar                                            |
-|---------------------------------|--------|---------|-----------------------------------------------------|
-| Shader kompilacija i linkovanje | Radi   | Gotovo  | -                                                   |
-| Camera kretanje                 | Radi   | Gotovo  | -                                                   |
-| Camera gledanje                 | Radi   | Gotovo  | -                                                   |
-| Model ucitavanje                | Nema   | Nema    | -                                                   |
-| Point osvetljenje               | Radi   | Gotovo  | -                                                   |
-| Directional osvetljenje         | Radi   | Gotovo  | -                                                   |
-| Spotlight                       | Radi   | Gotovo  | -                                                   |
-| Napredno osvetljenje            | Nema   | Nema    | -                                                   |
-| Blending                        | Radi   | U radu  | Resenje nije dovoljno elegantno po meni.            |
-| Face culling                    | Radi   | Gotovo  | Izgleda lose jer su verteksi kocke lose definisani. |
-| Skybox                          | Nema   | Nema    | -                                                   |
-| Bloom                           | Nema   | Nema    | -                                                   |
+| Funkcionalnost                  | Status | Progres  | Komentar                                            |
+|---------------------------------|--------|----------|-----------------------------------------------------|
+| Shader kompilacija i linkovanje | Radi   | Gotovo   | -                                                   |
+| Camera kretanje                 | Radi   | Gotovo   | -                                                   |
+| Camera gledanje                 | Radi   | Gotovo   | -                                                   |
+| Model ucitavanje                | Nema   | Nema     | -                                                   |
+| Point osvetljenje               | Radi   | Gotovo   | -                                                   |
+| Directional osvetljenje         | Radi   | Gotovo   | -                                                   |
+| Spotlight                       | Radi   | Gotovo   | -                                                   |
+| Blinn-Phong-v model             | Radi   | Gotovo   | -                                                   |
+| Blending                        | Radi   | U izradi | Resenje nije dovoljno elegantno po meni.            |
+| Face culling                    | Radi   | Gotovo   | Izgleda lose jer su verteksi kocke lose definisani. |
+| Skybox                          | Nema   | Nema     | -                                                   |
+| Bloom                           | Nema   | Nema     | -                                                   |
 
 ## Preostali posao
 - [ ] dovrsi ovaj README
@@ -41,7 +41,9 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 - [x] jos akcija na tastaturi (+/- brzina, osetljivost, inverzija x/y pogleda...) (16.04.2024.)
 - [x] face culling (17.04.2024.)
 - [x] blending (17.4.2024.)
-- [ ] advanced lighting
+- [x] blinn-phong (17.04.2024.)
+- [x] paljenje/gasenje efekata (face culling, blending, blinn-phong) (17.04.2024.)
+- [ ] bloom
 
 *Kasnije*
 - [ ] doradjivanje modela sa svicima i 'vodom'
