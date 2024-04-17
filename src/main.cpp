@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <algorithm>
 
 #include <utils.h>
 #include <shader.h>
@@ -54,8 +55,12 @@ int main()
     // capture cursor
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    // depth testing
+    // enabling gl tests
     glEnable(GL_DEPTH_TEST);
+
+    // configuring blending
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // creating a cube
     // configuring VBO and VAO
@@ -64,12 +69,12 @@ int main()
     glBindVertexArray(cubeVAO);
     glGenBuffers(1, &cubeVBO);
     glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(utils::cubeVerticesWNormalsTextures),
-                 &utils::cubeVerticesWNormalsTextures, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(data::cubeVerticesWNormalsTextures),
+                 &data::cubeVerticesWNormalsTextures, GL_STATIC_DRAW);
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)nullptr);
     glEnableVertexAttribArray(0);
-    // normal attribte
+    // normal attribute
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(3*sizeof(float)));
     glEnableVertexAttribArray(1);
     // texture attribute
@@ -81,14 +86,14 @@ int main()
     // cube positions
     std::vector<glm::vec3> cubePositions =
     {
-        glm::vec3(3.f, .0f, .0f),
-        glm::vec3(-3.f, .0f, .0f),
-        glm::vec3(.0f, 3.f, .0f),
-        glm::vec3(.0f, -3.f, .0f),
-        glm::vec3(.0f, .0f, 3.f),
-        glm::vec3(.0f, .0f, -3.f),
-
-        glm::vec3(6.f, .0f, .0f)
+        glm::vec3(4.f, .0f, .0f),
+        glm::vec3(-4.f, .0f, .0f),
+        glm::vec3(.0f, 4.f, .0f),
+        glm::vec3(.0f, -4.f, .0f),
+        glm::vec3(.0f, .0f, 4.f),
+        glm::vec3(.0f, .0f, -4.f),
+        // light cube position
+        glm::vec3(6.f, 6.f, 6.f)
     };
     // cube colors
     std::vector<glm::vec3> cubeColors =
@@ -99,9 +104,24 @@ int main()
         glm::vec3(.5f, .0f, .0f), // -y: dark red
         glm::vec3(.0f, .0f, 1.f), // +z: blue
         glm::vec3(.0f, .0f, .5f), // -z: darkblue
-
-        glm::vec3(1.f)             // light cube
+        // light cube color
+        glm::vec3(1.f)
     };
+
+    std::vector<glm::vec3> transparentCubePositions =
+    {
+        glm::vec3(.0f),
+        glm::vec3(2.f, 0.f, 2.0f),
+        glm::vec3(-2.f, 0.f, 2.0f),
+        glm::vec3(2.f, 0.f, -2.0f),
+        glm::vec3(-2.f, 0.f, -2.0f),
+        glm::vec3(2.f, 2.f, .0f),
+        glm::vec3(-2.f, 2.f, .0f),
+        glm::vec3(2.f, -2.f, .0f),
+        glm::vec3(-2.f, -2.f, .0f)
+    };
+
+    glm::vec3 transparentCubeColor = glm::vec3(.9f, .9f, 1.f);
 
     // creating a shader program
     Shader cubeShader("vertex.vs", "fragment.fs", "cube");
@@ -117,7 +137,7 @@ int main()
 
     PointLight pointLight =
     {
-        glm::vec3(4.f, .0f, .0f),
+        glm::vec3(6.f, 6.f, 6.f),
         glm::vec3(.0f),
 
         glm::vec3(.1f),
@@ -153,14 +173,13 @@ int main()
         // processing input from previous frame
         processInput(window);
         // clearing buffers for the current frame
-        glClearColor(.1f, .1f, .1f, 1.f);
+        glClearColor(.0f, .0f, .0f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // everything that will be rendered goes below
         // activating the shader
         cubeShader.activate();
         // sending camera information to shader
         cubeShader.setVec3("viewPosition", camera._position);
-        // TODO: create functions in shader that do this by passing the reference to the struct instance
         // sending light information to shader
         cubeShader.setDirectionalLight("directionalLight", directionalLight);
         cubeShader.setPointLight("pointLight", pointLight);
@@ -168,6 +187,16 @@ int main()
         spotlight.direction = camera.front();
         spotlight.on = flashlightOn;
         cubeShader.setSpotlight("spotlight", spotlight);
+
+        // sort transparent cube positions
+        std::sort(transparentCubePositions.begin(), transparentCubePositions.end(),
+            [cameraPosition = camera.position()](const glm::vec3 a, const glm::vec3 b)
+            {
+                float distanceA = glm::distance(a, cameraPosition);
+                float distanceB = glm::distance(b, cameraPosition);
+                return distanceA > distanceB;
+            }
+        );
 
         // updating the view and projection matrices
         glm::mat4 view = glm::mat4(1.f);
@@ -186,10 +215,27 @@ int main()
             if (i == n-1)
                 model = glm::scale(model, glm::vec3(.3f));
             cubeShader.setVec3("color", cubeColors[i]);
+            cubeShader.setFloat("alpha", 1.f);
             cubeShader.setMat4("model", model);
             // binding the vertex array and drawing
             glBindVertexArray(cubeVAO);
             glDrawArrays(GL_TRIANGLES, 0, 36);
+            glBindVertexArray(0);
+        }
+
+        // drawing transparent objects last
+        for (int i = 0; i < transparentCubePositions.size(); ++i)
+        {
+            model = glm::mat4(1.f);
+            model = glm::translate(model, transparentCubePositions[i]);
+            model = glm::scale(model, glm::vec3(.5f));
+            cubeShader.setVec3("color", transparentCubeColor);
+            cubeShader.setFloat("alpha", .2f);
+            cubeShader.setMat4("model", model);
+
+            glBindVertexArray(cubeVAO);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+            glBindVertexArray(0);
         }
 
         glfwSwapBuffers(window);

@@ -122,6 +122,11 @@ public:
         glUniform3fv(glGetUniformLocation(_programID, name.c_str()), 1, &vector[0]);
     }
 
+    void setVec4(const std::string& name, const glm::vec3& vector)
+    {
+        glUniform4fv(glGetUniformLocation(_programID, name.c_str()), 1, &vector[0]);
+    }
+
     void setFloat(const std::string& name, const float value)
     const {
         glUniform1f(glGetUniformLocation(_programID, name.c_str()), value);

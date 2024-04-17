@@ -52,6 +52,7 @@ in vec3 FragmentPosition;
 // uniform variables
 uniform vec3 viewPosition;
 uniform vec3 color;
+uniform float alpha;
 uniform DirectionalLight directionalLight;
 uniform PointLight pointLight;
 uniform Spotlight spotlight;
@@ -67,7 +68,7 @@ void main()
     if (spotlight.on)
         result += calculateSpotlight(spotlight, normal, viewDirection, FragmentPosition);
 
-    FragColor = vec4(result, 1.0f);
+    FragColor = vec4(result, alpha);
 }
 // function definitions
 vec3 calculateDirectional(DirectionalLight light, vec3 normal, vec3 viewDirection)
@@ -85,7 +86,7 @@ vec3 calculateDirectional(DirectionalLight light, vec3 normal, vec3 viewDirectio
     vec3 diffuse = light.diffuse * diffuseFactor * color;
     vec3 specular = light.specular * specularFactor * color;
 
-    return ambient + diffuse + specular;
+    return (ambient + diffuse + specular);
 }
 
 vec3 calculatePoint(PointLight light, vec3 normal, vec3 viewDirection, vec3 fragmentPosition)

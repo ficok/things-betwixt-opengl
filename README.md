@@ -7,20 +7,20 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 ## Where I got my resources
 
 ## Progress
-| Functionality                | Status  | Progress | Comment |
-|------------------------------|---------|----------|---------|
-| Shader compiling and linking | Working | Done     | -       |
-| Camera movement              | Working | Done     | -       |
-| Camera looking               | Working | Done     | -       |
-| Model loading                | None    | None     | -       |
-| Point lighting               | Working | Done     | -       |
-| Directional lighting         | Working | Done     | -       |
-| Spotlight                    | Working | Done     | -       |
-| Advanced lighting            | None    | None     | -       |
-| Blending                     | None    | None     | -       |
-| Face culling                 | None    | None     | -       |
-| Skybox                       | None    | None     | -       |
-| Bloom                        | None    | None     | -       |
+| Functionality                | Status  | Progress     | Comment                                 |
+|------------------------------|---------|--------------|-----------------------------------------|
+| Shader compiling and linking | Working | Done         | -                                       |
+| Camera movement              | Working | Done         | -                                       |
+| Camera looking               | Working | Done         | -                                       |
+| Model loading                | None    | None         | -                                       |
+| Point lighting               | Working | Done         | -                                       |
+| Directional lighting         | Working | Done         | -                                       |
+| Spotlight                    | Working | Done         | -                                       |
+| Advanced lighting            | None    | None         | -                                       |
+| Blending                     | Working | In progress  | The solution is not elegant enough imo. |
+| Face culling                 | None    | None         | -                                       |
+| Skybox                       | None    | None         | -                                       |
+| Bloom                        | None    | None         | -                                       |
 
 ## To-do
 - [ ] finish this README
@@ -40,7 +40,7 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 - [x] spotlight toggle (16.04.2024.)
 - [x] more keyboard actions (inc/decr speed, sensitivity, toggle x/y axis inversion...) (16.04.2024.)
 - [ ] face culling
-- [ ] blending
+- [x] blending (17.04.2024.)
 - [ ] advanced lighting
 
 *Later on*

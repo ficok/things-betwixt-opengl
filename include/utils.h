@@ -9,31 +9,34 @@
 // ignore warnings about unused parameters
 #define UNUSED(x)(void)x
 
-namespace utils {
+// utility functions
+namespace utils
+{
     // declarations
-    std::string readFile(const std::string& path);
-    std::string shadersDir(const std::string& path);
-    std::string objectsDir(const std::string& path);
+    std::string readFile(const std::string &path);
+    std::string shadersDir(const std::string &path);
+    std::string objectsDir(const std::string &path);
 
     // definitions
-    std::string readFile(const std::string& path) {
+    std::string readFile(const std::string &path) {
         std::ifstream in(path);
         std::stringstream buffer;
         buffer << in.rdbuf();
         return buffer.str();
     }
 
-    std::string shadersDir(const std::string& path)
-    {
+    std::string shadersDir(const std::string &path) {
         return "resources/shaders/" + path;
     }
 
-    std::string objectsDir(const std::string& path)
-    {
+    std::string objectsDir(const std::string &path) {
         return "resources/objects/" + path;
     }
+}
 
-    // useful data
+// variables containing vertex information
+namespace data
+{
     float cubeVertices[] =
             {
                     // positions

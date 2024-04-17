@@ -4,6 +4,9 @@ resources/objects/
 # executable file
 ThingsBetwixt
 
+# private files
+PITANJA.md
+
 ### bin ###
 bin/
 
