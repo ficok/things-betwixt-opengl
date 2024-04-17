@@ -53,6 +53,7 @@ in vec3 FragmentPosition;
 uniform vec3 viewPosition;
 uniform vec3 color;
 uniform float alpha;
+uniform bool blinn;
 uniform DirectionalLight directionalLight;
 uniform PointLight pointLight;
 uniform Spotlight spotlight;
@@ -78,9 +79,17 @@ vec3 calculateDirectional(DirectionalLight light, vec3 normal, vec3 viewDirectio
     // calculating the diffuse factor
     float diffuseFactor = max(dot(normal, lightDirection), 0.0f);
     // calculating the specular factor
-    // calculating the reflection vector
-    vec3 reflectionDirection = reflect(-lightDirection, normal);
-    float specularFactor = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 32.0f);
+    float specularFactor = 0.0f;
+    if (blinn)
+    {
+        vec3 halfway = normalize(lightDirection + viewDirection);
+        specularFactor = pow(max(dot(halfway, normal), .0f), 32.f);
+    }
+    else
+    {
+        vec3 reflectionDirection = reflect(-lightDirection, normal);
+        specularFactor = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 8.0f);
+    }
     // calculating the light components
     vec3 ambient = light.ambient * color;
     vec3 diffuse = light.diffuse * diffuseFactor * color;
@@ -96,8 +105,17 @@ vec3 calculatePoint(PointLight light, vec3 normal, vec3 viewDirection, vec3 frag
     // calculating the diffuse factor
     float diffuseFactor = max(dot(normal, lightDirection), .0f);
     // calculating the specular factor
-    vec3 reflectionDirection = reflect(-lightDirection, normal);
-    float specularFactor = pow(max(dot(viewDirection, reflectionDirection), .0f), 32.f);
+    float specularFactor = 0.0f;
+    if (blinn)
+    {
+        vec3 halfway = normalize(lightDirection + viewDirection);
+        specularFactor = pow(max(dot(halfway, normal), .0f), 32.f);
+    }
+    else
+    {
+        vec3 reflectionDirection = reflect(-lightDirection, normal);
+        specularFactor = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 8.0f);
+    }
     // calculating attenuation
     float distance = length(light.position - fragmentPosition);
     float attenuation = 1.f / (light.constant + light.linear * distance + light.quadratic * distance * distance);
@@ -116,8 +134,17 @@ vec3 calculateSpotlight(Spotlight light, vec3 normal, vec3 viewDirection, vec3 f
     // calculating the diffuse factor
     float diffuseFactor = max(dot(normal, lightDirection), 0.0);
     // calculating the specular factor
-    vec3 reflectionDirection = reflect(-lightDirection, normal);
-    float specularFactor = pow(max(dot(viewDirection, reflectionDirection), 0.0), 32.f);
+    float specularFactor = 0.0f;
+   if (blinn)
+    {
+        vec3 halfway = normalize(lightDirection + viewDirection);
+        specularFactor = pow(max(dot(halfway, normal), .0f), 32.f);
+    }
+    else
+    {
+        vec3 reflectionDirection = reflect(-lightDirection, normal);
+        specularFactor = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 8.0f);
+    }
     // attenuation
     float distance = length(light.position - fragmentPosition);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));

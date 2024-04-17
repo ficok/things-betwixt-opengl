@@ -2,6 +2,7 @@
 #define THINGSBETWIXT_UTILS_H
 
 #include <string>
+#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <vector>
@@ -16,6 +17,7 @@ namespace utils
     std::string readFile(const std::string &path);
     std::string shadersDir(const std::string &path);
     std::string objectsDir(const std::string &path);
+    void printInfo(const bool blend, const bool cull, const bool blinn, const bool flashlightOn);
 
     // definitions
     std::string readFile(const std::string &path) {
@@ -31,6 +33,17 @@ namespace utils
 
     std::string objectsDir(const std::string &path) {
         return "resources/objects/" + path;
+    }
+
+    void printInfo(const bool blend, const bool cull, const bool blinn, const bool flashlightOn)
+    {
+        std::cout <<
+            "INFO: default values:\n" <<
+            "INFO: flashlight is " << (flashlightOn ? "on;\n" : "off;\n") <<
+            "INFO: face culling is " << (cull ? "on;\n" : "off;\n") <<
+            "INFO: transparency is " << (blend ? "on;\n" : "off;\n") <<
+            "INFO: using " << (blinn ? "blinn-phong's model.\n" : "phong's model.\n") <<
+            "----------\n\n";
     }
 }
 

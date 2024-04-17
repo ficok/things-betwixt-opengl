@@ -42,6 +42,7 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 - [x] face culling (17.04.2024.)
 - [x] blending (17.04.2024.)
 - [ ] advanced lighting
+- [ ] toggle effects (blending, face culling, blinn-phong)
 
 *Later on*
 - [ ] reworking the model with fireflies and 'water'

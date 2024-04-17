@@ -28,6 +28,9 @@ Camera camera(glm::vec3(.0f, .0f, .0f));
 Frame frame = {.0f, .0f, .0f};
 Mouse mouse = {(double)S_WIDTH/2, (double)S_HEIGHT/2, true};
 bool flashlightOn = false;
+bool blinn = true;
+bool cull = false;
+bool blend = true;
 
 int main()
 {
@@ -57,8 +60,6 @@ int main()
 
     // enabling gl tests
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glEnable(GL_CULL_FACE);
 
     // configuring tests
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -165,6 +166,9 @@ int main()
         flashlightOn
     };
 
+    // print some default values
+    utils::printInfo(blend, cull, blinn, flashlightOn);
+
     // render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -172,6 +176,10 @@ int main()
         frame.current = glfwGetTime();
         frame.delta = frame.current - frame.last;
         frame.last = frame.current;
+
+        // toggling tests
+        cull ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+        blend ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
 
         // processing input from previous frame
         processInput(window);
@@ -190,6 +198,9 @@ int main()
         spotlight.direction = camera.front();
         spotlight.on = flashlightOn;
         cubeShader.setSpotlight("spotlight", spotlight);
+
+        // indicate if we're using blinn-phong or phong
+        cubeShader.setBool("blinn", blinn);
 
         // sort transparent cube positions
         std::sort(transparentCubePositions.begin(), transparentCubePositions.end(),
@@ -343,4 +354,25 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         camera.invertAxis('x');
     if (key == GLFW_KEY_Z && action == GLFW_PRESS)
         camera.invertAxis('y');
+
+    // toggle face culling
+    if (key == GLFW_KEY_C && action == GLFW_PRESS)
+    {
+        cull = !cull;
+        std::cout << "INFO: " << (cull ? "culling faces.\n" : "not culling faces.\n");
+    }
+
+    // toggle transparency (blending)
+    if (key == GLFW_KEY_B && action == GLFW_PRESS)
+    {
+        blend = !blend;
+        std::cout << "INFO: transparency " << (blend ? "on.\n" : "off.\n");
+    }
+
+    // toggle blinn-phong and phong
+    if (key == GLFW_KEY_P && action == GLFW_PRESS)
+    {
+        blinn = !blinn;
+        std::cout << "INFO: using " << (blinn ? "blinn-phong's model.\n" : "phong's model.\n");
+    }
 }
