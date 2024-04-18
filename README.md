@@ -21,6 +21,7 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 | Face culling                 | Working | Done     | Looks broken because cube vertices were poorly defined. |
 | Skybox                       | None    | None     | -                                                       |
 | Bloom                        | None    | None     | -                                                       |
+| IMGUI with settings info     | None    | None     | -                                                       |
 
 ## To-do
 - [ ] finish this README

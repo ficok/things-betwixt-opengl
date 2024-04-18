@@ -136,7 +136,7 @@ int main()
         glm::vec3(.0f, -1.f, .0f),
         glm::vec3(.05f),
         glm::vec3(.2f),
-        glm::vec3(.2f)
+        glm::vec3(1.f)
     };
 
     PointLight pointLight =

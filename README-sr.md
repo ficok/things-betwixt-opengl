@@ -21,6 +21,7 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 | Face culling                    | Radi   | Gotovo   | Izgleda lose jer su verteksi kocke lose definisani. |
 | Skybox                          | Nema   | Nema     | -                                                   |
 | Bloom                           | Nema   | Nema     | -                                                   |
+| IMGUI sa info o podesavanjima   | Nema   | Nema     | -                                                   |
 
 ## Preostali posao
 - [ ] dovrsi ovaj README

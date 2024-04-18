@@ -83,7 +83,7 @@ vec3 calculateDirectional(DirectionalLight light, vec3 normal, vec3 viewDirectio
     if (blinn)
     {
         vec3 halfway = normalize(lightDirection + viewDirection);
-        specularFactor = pow(max(dot(halfway, normal), .0f), 32.f);
+        specularFactor = pow(max(dot(halfway, normal), .0f), 64.f);
     }
     else
     {
@@ -109,7 +109,7 @@ vec3 calculatePoint(PointLight light, vec3 normal, vec3 viewDirection, vec3 frag
     if (blinn)
     {
         vec3 halfway = normalize(lightDirection + viewDirection);
-        specularFactor = pow(max(dot(halfway, normal), .0f), 32.f);
+        specularFactor = pow(max(dot(halfway, normal), .0f), 64.f);
     }
     else
     {
@@ -138,7 +138,7 @@ vec3 calculateSpotlight(Spotlight light, vec3 normal, vec3 viewDirection, vec3 f
    if (blinn)
     {
         vec3 halfway = normalize(lightDirection + viewDirection);
-        specularFactor = pow(max(dot(halfway, normal), .0f), 32.f);
+        specularFactor = pow(max(dot(halfway, normal), .0f), 64.f);
     }
     else
     {
