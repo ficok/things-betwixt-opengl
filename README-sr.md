@@ -20,6 +20,7 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 | Blending                        | Radi   | U izradi | Resenje nije dovoljno elegantno po meni.            |
 | Face culling                    | Radi   | Gotovo   | Izgleda lose jer su verteksi kocke lose definisani. |
 | Skybox                          | Nema   | Nema     | -                                                   |
+| HDR                             | Nema   | Nema     | -                                                   |
 | Bloom                           | Nema   | Nema     | -                                                   |
 | IMGUI sa info o podesavanjima   | Nema   | Nema     | -                                                   |
 
@@ -45,6 +46,8 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 - [x] blinn-phong (17.04.2024.)
 - [x] paljenje/gasenje efekata (face culling, blending, blinn-phong) (17.04.2024.)
 - [ ] bloom
+  - [ ] framebuffers
+  - [ ] hdr
 
 *Kasnije*
 - [ ] doradjivanje modela sa svicima i 'vodom'

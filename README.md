@@ -20,6 +20,7 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 | Blending                     | Working | Ongoing  | The solution is not elegant enough imo.                 |
 | Face culling                 | Working | Done     | Looks broken because cube vertices were poorly defined. |
 | Skybox                       | None    | None     | -                                                       |
+| HDR                          | None    | None     | -                                                       |
 | Bloom                        | None    | None     | -                                                       |
 | IMGUI with settings info     | None    | None     | -                                                       |
 
@@ -45,6 +46,8 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 - [x] blinn-phong (17.04.2024.)
 - [x] toggle effects (blending, face culling, blinn-phong) (17.04.2024.)
 - [ ] bloom
+  - [ ] framebuffers
+  - [ ] hdr
 
 *Later on*
 - [ ] reworking the model with fireflies and 'water'
