@@ -34,7 +34,8 @@ public:
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, S_WIDTH, S_HEIGHT,
                              0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
             case RGBA:
-                std::cout << "INFO [framebuffer]: todo\n";
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, S_WIDTH, S_HEIGHT,
+                             0, GL_RGBA, GL_FLOAT, nullptr);
         }
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
