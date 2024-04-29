@@ -20,7 +20,7 @@ namespace utils
     std::string readFile(const std::string &path);
     std::string shadersDir(const std::string &path);
     std::string objectsDir(const std::string &path);
-    void printInfo(const bool blend, const bool cull, const bool blinn, const bool flashlightOn);
+    void printInfo(bool blend, bool cull, bool blinn, bool flashlightOn);
 
     // definitions
     std::string readFile(const std::string &path) {

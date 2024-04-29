@@ -24,6 +24,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 Camera camera(glm::vec3(.0f, .0f, .0f));
 Frame frame = {.0f, .0f, .0f};
 Mouse mouse = {(double)S_WIDTH/2, (double)S_HEIGHT/2, true};
+float exposure = .2f;
 
 int main()
 {
@@ -101,7 +102,7 @@ int main()
         glm::vec3(.0f, .0f, 1.f), // +z: blue
         glm::vec3(.0f, .0f, .5f), // -z: darkblue
         // light cube color
-        glm::vec3(1.f)
+        glm::vec3(200.f)
     };
 
     std::vector<glm::vec3> transparentCubePositions =
@@ -136,9 +137,11 @@ int main()
     Shader cubeShader("vertex.vs", "fragment.fs", "cube");
     Shader lightCubeShader("lightCube.vs", "lightCube.fs", "lightCube");
     Shader screenShader("screen.vs", "screen.fs", "screen");
+    Shader hdrShader("hdr.vs", "hdr.fs", "hdr");
 
     // creating a custom framebuffer
     Framebuffer colorInvertFramebuffer(RGB);
+    Framebuffer hdrFramebuffer(RGBA);
 
     // initializing the light
     DirectionalLight directionalLight =
@@ -200,8 +203,11 @@ int main()
         processInput(window);
 
         // activating the custom framebuffer
-        if (toggle::postprocessing)
-            colorInvertFramebuffer.activate();
+        // if (toggle::postprocessing)
+        //     colorInvertFramebuffer.activate();
+
+        if (toggle::hdr)
+            hdrFramebuffer.activate();
 
         // clearing buffers for the current frame
         glClearColor(.0f, .0f, .0f, 1.f);
@@ -284,17 +290,32 @@ int main()
             glBindVertexArray(0);
         }
 
-        if (toggle::postprocessing)
-        {
+        // if (toggle::postprocessing)
+        // {
             // activate the default framebuffer
-            colorInvertFramebuffer.deactivate();
-            glDisable(GL_DEPTH_TEST);
-            glClear(GL_COLOR_BUFFER_BIT);
+        //     colorInvertFramebuffer.deactivate();
+        //     glDisable(GL_DEPTH_TEST);
+        //     glClear(GL_COLOR_BUFFER_BIT);
 
             // draw the screen rectangle with the texture from custom color buffer bit
-            screenShader.activate();
+        //     screenShader.activate();
+        //     glBindVertexArray(rectangleVAO);
+        //     glActiveTexture(GL_TEXTURE0);
+        //     glBindTexture(GL_TEXTURE_2D, colorInvertFramebuffer._colorBuffer);
+        //     glDrawArrays(GL_TRIANGLES, 0, 6);
+        // }
+
+        if (toggle::hdr)
+        {
+            hdrFramebuffer.deactivate();
+            glDisable(GL_DEPTH_TEST);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            hdrShader.activate();
+            hdrShader.setFloat("exposure", exposure);
             glBindVertexArray(rectangleVAO);
-            glBindTexture(GL_TEXTURE_2D, colorInvertFramebuffer._colorBuffer);
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, hdrFramebuffer._colorBuffer);
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }
 
@@ -416,5 +437,21 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     {
         toggle::postprocessing = !toggle::postprocessing;
         std::cout << "INFO: post-processing " << (toggle::postprocessing ? "activated.\n" : "deactivated.\n");
+    }
+
+    // exposure
+    if (key == GLFW_KEY_Q && action == GLFW_PRESS)
+    {
+        exposure -= .005f;
+        if (exposure < .0f)
+            exposure = .0f;
+        std::cout << "INFO: exposure: " << exposure << "\n";
+    }
+    if (key == GLFW_KEY_E && action == GLFW_PRESS)
+    {
+        exposure += .005f;
+        if (exposure > 1.f)
+            exposure = 1.f;
+        std::cout << "INFO: exposure: " << exposure << "\n";
     }
 }
