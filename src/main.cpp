@@ -24,11 +24,6 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 Camera camera(glm::vec3(.0f, .0f, .0f));
 Frame frame = {.0f, .0f, .0f};
 Mouse mouse = {(double)S_WIDTH/2, (double)S_HEIGHT/2, true};
-bool flashlightOn = false;
-bool blinn = true;
-bool cull = false;
-bool blend = true;
-bool postprocessing = false;
 
 int main()
 {
@@ -178,7 +173,7 @@ int main()
         1.f, .09f, .032f,
         glm::cos(glm::radians(5.f)),
         glm::cos(glm::radians(20.f)),
-        flashlightOn
+        toggle::flashlightOn
     };
 
     // sending render independent info to shaders
@@ -186,7 +181,7 @@ int main()
     screenShader.setInt("screen", 0);
 
     // print some default values
-    utils::printInfo(blend, cull, blinn, flashlightOn);
+    utils::printInfo(toggle::blend, toggle::cull, toggle::blinn, toggle::flashlightOn);
 
     // render loop
     while (!glfwWindowShouldClose(window))
@@ -197,18 +192,16 @@ int main()
         frame.last = frame.current;
 
         // toggling tests
-        cull ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
-        blend ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
+        toggle::cull ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+        toggle::blend ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
 
         // processing input from previous frame
         processInput(window);
 
         // activating the custom framebuffer
-        if (postprocessing)
-        {
+        if (toggle::postprocessing)
             colorInvertFramebuffer.activate();
-        }
 
         // clearing buffers for the current frame
         glClearColor(.0f, .0f, .0f, 1.f);
@@ -224,11 +217,11 @@ int main()
         cubeShader.setPointLight("pointLight", pointLight);
         spotlight.position = camera.position();
         spotlight.direction = camera.front();
-        spotlight.on = flashlightOn;
+        spotlight.on = toggle::flashlightOn;
         cubeShader.setSpotlight("spotlight", spotlight);
 
         // indicate if we're using blinn-phong or phong
-        cubeShader.setBool("blinn", blinn);
+        cubeShader.setBool("blinn", toggle::blinn);
 
         // sort transparent cube positions
         std::sort(transparentCubePositions.begin(), transparentCubePositions.end(),
@@ -291,7 +284,7 @@ int main()
             glBindVertexArray(0);
         }
 
-        if (postprocessing)
+        if (toggle::postprocessing)
         {
             // activate the default framebuffer
             colorInvertFramebuffer.deactivate();
@@ -374,8 +367,8 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     UNUSED(window); UNUSED(scancode); UNUSED(mods);
     // toggle flashlight
     if (key == GLFW_KEY_F && action == GLFW_PRESS) {
-        flashlightOn = !flashlightOn;
-        std::cout << "INFO: flashlight turned " << (flashlightOn ? "on\n" : "off\n");
+        toggle::flashlightOn = !toggle::flashlightOn;
+        std::cout << "INFO: flashlight turned " << (toggle::flashlightOn ? "on\n" : "off\n");
     }
 
     // movement speed
@@ -400,28 +393,28 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     // toggle face culling
     if (key == GLFW_KEY_C && action == GLFW_PRESS)
     {
-        cull = !cull;
-        std::cout << "INFO: " << (cull ? "culling faces.\n" : "not culling faces.\n");
+        toggle::cull = !toggle::cull;
+        std::cout << "INFO: " << (toggle::cull ? "culling faces.\n" : "not culling faces.\n");
     }
 
     // toggle transparency (blending)
     if (key == GLFW_KEY_B && action == GLFW_PRESS)
     {
-        blend = !blend;
-        std::cout << "INFO: transparency " << (blend ? "on.\n" : "off.\n");
+        toggle::blend = !toggle::blend;
+        std::cout << "INFO: transparency " << (toggle::blend ? "on.\n" : "off.\n");
     }
 
     // toggle blinn-phong and phong
     if (key == GLFW_KEY_P && action == GLFW_PRESS)
     {
-        blinn = !blinn;
-        std::cout << "INFO: using " << (blinn ? "blinn-phong's model.\n" : "phong's model.\n");
+        toggle::blinn = !toggle::blinn;
+        std::cout << "INFO: using " << (toggle::blinn ? "blinn-phong's model.\n" : "phong's model.\n");
     }
 
     // toggle custom framebuffer and post-processing
     if (key == GLFW_KEY_I && action == GLFW_PRESS)
     {
-        postprocessing = !postprocessing;
-        std::cout << "INFO: post-processing " << (postprocessing ? "activated.\n" : "deactivated.\n");
+        toggle::postprocessing = !toggle::postprocessing;
+        std::cout << "INFO: post-processing " << (toggle::postprocessing ? "activated.\n" : "deactivated.\n");
     }
 }

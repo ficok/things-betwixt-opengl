@@ -50,6 +50,17 @@ namespace utils
     }
 }
 
+// variables that indicate the toggle state
+namespace toggle
+{
+    bool flashlightOn = false;
+    bool blinn = true;
+    bool cull = false;
+    bool blend = true;
+    bool postprocessing = false;
+    bool hdr = true;
+}
+
 // variables containing vertex information
 namespace data
 {
