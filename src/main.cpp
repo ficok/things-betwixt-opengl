@@ -199,6 +199,7 @@ int main()
         // toggling tests
         cull ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
         blend ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
+        glEnable(GL_DEPTH_TEST);
 
         // processing input from previous frame
         processInput(window);
@@ -207,7 +208,6 @@ int main()
         if (postprocessing)
         {
             colorInvertFramebuffer.activate();
-            glEnable(GL_DEPTH_TEST);
         }
 
         // clearing buffers for the current frame
