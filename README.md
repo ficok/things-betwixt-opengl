@@ -46,7 +46,7 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 - [x] blinn-phong (17.04.2024.)
 - [x] toggle effects (blending, face culling, blinn-phong) (17.04.2024.)
 - [ ] bloom
-  - [ ] framebuffers
+  - [x] framebuffers (29.04.2024.)
   - [ ] hdr
 
 *Later on*

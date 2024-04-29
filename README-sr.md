@@ -46,7 +46,7 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 - [x] blinn-phong (17.04.2024.)
 - [x] paljenje/gasenje efekata (face culling, blending, blinn-phong) (17.04.2024.)
 - [ ] bloom
-  - [ ] framebuffers
+  - [x] framebuffers (29.04.2024.)
   - [ ] hdr
 
 *Kasnije*
