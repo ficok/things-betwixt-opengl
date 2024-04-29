@@ -9,6 +9,7 @@
 #include <camera.h>
 #include <structures.h>
 #include <errors.h>
+#include <framebuffer.h>
 
 // function declarations
 void processInput(GLFWwindow* window);
