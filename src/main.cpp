@@ -143,7 +143,7 @@ int main()
     Shader screenShader("screen.vs", "screen.fs", "screen");
 
     // creating a custom framebuffer
-    Framebuffer colorInvert(RGB);
+    Framebuffer colorInvertFramebuffer(RGB);
 
     // initializing the light
     DirectionalLight directionalLight =
@@ -206,7 +206,7 @@ int main()
         // activating the custom framebuffer
         if (postprocessing)
         {
-            colorInvert.activate();
+            colorInvertFramebuffer.activate();
             glEnable(GL_DEPTH_TEST);
         }
 
@@ -294,14 +294,14 @@ int main()
         if (postprocessing)
         {
             // activate the default framebuffer
-            colorInvert.deactivate();
+            colorInvertFramebuffer.deactivate();
             glDisable(GL_DEPTH_TEST);
             glClear(GL_COLOR_BUFFER_BIT);
 
             // draw the screen rectangle with the texture from custom color buffer bit
             screenShader.activate();
             glBindVertexArray(rectangleVAO);
-            glBindTexture(GL_TEXTURE_2D, colorInvert._texture);
+            glBindTexture(GL_TEXTURE_2D, colorInvertFramebuffer._colorBuffer);
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }
 
