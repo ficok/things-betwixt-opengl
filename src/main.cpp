@@ -28,6 +28,7 @@ bool flashlightOn = false;
 bool blinn = true;
 bool cull = false;
 bool blend = true;
+bool postprocessing = false;
 
 int main()
 {
@@ -122,10 +123,27 @@ int main()
     };
 
     glm::vec3 transparentCubeColor = glm::vec3(.9f, .9f, 1.f);
+    
+    // creating a rectangle that represents the screen (for the framebuffer texture)
+    unsigned int rectangleVAO, rectangleVBO;
+    glGenVertexArrays(1, &rectangleVAO);
+    glGenBuffers(1, &rectangleVBO);
+    glBindVertexArray(rectangleVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, rectangleVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(data::rectangleVertices), &data::rectangleVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    glBindVertexArray(0);
 
     // creating a shader program
     Shader cubeShader("vertex.vs", "fragment.fs", "cube");
     Shader lightCubeShader("lightCube.vs", "lightCube.fs", "lightCube");
+    Shader screenShader("screen.vs", "screen.fs", "screen");
+
+    // creating a custom framebuffer
+    Framebuffer colorInvert(RGB);
 
     // initializing the light
     DirectionalLight directionalLight =
@@ -163,6 +181,10 @@ int main()
         flashlightOn
     };
 
+    // sending render independent info to shaders
+    screenShader.activate();
+    screenShader.setInt("screen", 0);
+
     // print some default values
     utils::printInfo(blend, cull, blinn, flashlightOn);
 
@@ -180,9 +202,18 @@ int main()
 
         // processing input from previous frame
         processInput(window);
+
+        // activating the custom framebuffer
+        if (postprocessing)
+        {
+            colorInvert.activate();
+            glEnable(GL_DEPTH_TEST);
+        }
+
         // clearing buffers for the current frame
         glClearColor(.0f, .0f, .0f, 1.f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
         // everything that will be rendered goes below
         // activating the shader
         cubeShader.activate();
@@ -258,6 +289,20 @@ int main()
             glBindVertexArray(cubeVAO);
             glDrawArrays(GL_TRIANGLES, 0, 36);
             glBindVertexArray(0);
+        }
+
+        if (postprocessing)
+        {
+            // activate the default framebuffer
+            colorInvert.deactivate();
+            glDisable(GL_DEPTH_TEST);
+            glClear(GL_COLOR_BUFFER_BIT);
+
+            // draw the screen rectangle with the texture from custom color buffer bit
+            screenShader.activate();
+            glBindVertexArray(rectangleVAO);
+            glBindTexture(GL_TEXTURE_2D, colorInvert._texture);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
         }
 
         glfwSwapBuffers(window);
@@ -371,5 +416,12 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     {
         blinn = !blinn;
         std::cout << "INFO: using " << (blinn ? "blinn-phong's model.\n" : "phong's model.\n");
+    }
+
+    // toggle custom framebuffer and post-processing
+    if (key == GLFW_KEY_I && action == GLFW_PRESS)
+    {
+        postprocessing = !postprocessing;
+        std::cout << "INFO: post-processing " << (postprocessing ? "activated.\n" : "deactivated.\n");
     }
 }

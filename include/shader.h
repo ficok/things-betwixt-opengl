@@ -137,6 +137,11 @@ public:
         glUniform1i(glGetUniformLocation(_programID, name.c_str()), (int)value);
     }
 
+    void setInt(const std::string& name, const int value)
+    const {
+        glUniform1i(glGetUniformLocation(_programID, name.c_str()), value);
+    }
+
     // methods
     void activate()
     const {

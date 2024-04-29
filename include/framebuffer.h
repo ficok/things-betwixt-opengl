@@ -57,7 +57,7 @@ public:
 
     void activate()
     const {
-        glBindFramebuffer(GL_FRAMEBUFFER, this->_fbo);
+        glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
     }
 
     void deactivate()
