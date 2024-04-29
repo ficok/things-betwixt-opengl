@@ -10,10 +10,6 @@
 #include <structures.h>
 #include <errors.h>
 
-#define S_WIDTH  2000
-#define S_HEIGHT 1500
-#define TITLE "Things betwixt"
-
 // function declarations
 void processInput(GLFWwindow* window);
 

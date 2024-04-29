@@ -9,6 +9,9 @@
 
 // ignore warnings about unused parameters
 #define UNUSED(x)(void)x
+#define S_WIDTH  2000
+#define S_HEIGHT 1500
+#define TITLE "Things betwixt"
 
 // utility functions
 namespace utils
