@@ -24,7 +24,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 Camera camera(glm::vec3(.0f, .0f, .0f));
 Frame frame = {.0f, .0f, .0f};
 Mouse mouse = {(double)S_WIDTH/2, (double)S_HEIGHT/2, true};
-float exposure = .1f;
+float exposure = .05f;
 
 int main()
 {
@@ -208,7 +208,6 @@ int main()
         processInput(window);
 
         // drawing into the hdr framebuffer
-//        glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
         hdrFB.activate();
 
         // clearing buffers for the current frame
@@ -303,22 +302,14 @@ int main()
         unsigned nrPasses = 10; // double the nr of weights in blur shader
         for (unsigned i = 0; i < nrPasses; ++i)
         {
-            if (horizontal)
-                pingpongFB1.activate();
-            else
-                pingpongFB2.activate();
+            horizontal ? pingpongFB1.activate() : pingpongFB2.activate();
 
             glActiveTexture(GL_TEXTURE0);
             blurShader.setBool("horizontal", horizontal);
 
-            if (firstIteration) {
-                glBindTexture(GL_TEXTURE_2D, hdrFB.colorBuffers[1]);
-            } else {
-                if (horizontal)
-                    glBindTexture(GL_TEXTURE_2D, pingpongFB2.colorBuffers[0]);
-                else
-                    glBindTexture(GL_TEXTURE_2D, pingpongFB1.colorBuffers[0]);
-            }
+            glBindTexture(GL_TEXTURE_2D,
+                          firstIteration ? hdrFB.colorBuffers[1] :
+                                                 (horizontal ? pingpongFB2.colorBuffers[0] : pingpongFB1.colorBuffers[0]));
 
             glBindVertexArray(rectangleVAO);
             glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -326,9 +317,10 @@ int main()
 
             horizontal = !horizontal;
             if (firstIteration)
-                firstIteration = !firstIteration;
+                firstIteration = false;
+
+            horizontal ? pingpongFB1.deactivate() : pingpongFB2.deactivate();
         }
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         // render floating point color buffer to a 2D rectangle
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -336,11 +328,7 @@ int main()
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, hdrFB.colorBuffers[0]);
         glActiveTexture(GL_TEXTURE1);
-        if (horizontal)
-            glBindTexture(GL_TEXTURE_2D, pingpongFB2.colorBuffers[0]);
-        else
-            glBindTexture(GL_TEXTURE_2D, pingpongFB1.colorBuffers[0]);
-
+        glBindTexture(GL_TEXTURE_2D, horizontal ? pingpongFB2.colorBuffers[0] : pingpongFB1.colorBuffers[0]);
         bloomShader.setBool("bloom", toggle::bloom);
         bloomShader.setFloat("exposure", exposure);
         glBindVertexArray(rectangleVAO);
