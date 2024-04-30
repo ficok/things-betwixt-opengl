@@ -24,7 +24,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 Camera camera(glm::vec3(.0f, .0f, .0f));
 Frame frame = {.0f, .0f, .0f};
 Mouse mouse = {(double)S_WIDTH/2, (double)S_HEIGHT/2, true};
-float exposure = .2f;
+float exposure = .1f;
 
 int main()
 {
@@ -102,7 +102,7 @@ int main()
         glm::vec3(.0f, .0f, 1.f), // +z: blue
         glm::vec3(.0f, .0f, .5f), // -z: darkblue
         // light cube color
-        glm::vec3(200.f)
+        glm::vec3(100.f)
     };
 
     std::vector<glm::vec3> transparentCubePositions =
