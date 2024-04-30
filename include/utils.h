@@ -59,6 +59,7 @@ namespace toggle
     bool blend = true;
     bool postprocessing = false;
     bool hdr = true;
+    bool bloom = true;
 }
 
 // variables containing vertex information
@@ -157,13 +158,13 @@ namespace data
     float rectangleVertices[] =
     {
         // positions             // texCoords
-        -1.0f,  1.0f,  0.0f, 1.0f,
-        -1.0f, -1.0f,  0.0f, 0.0f,
-         1.0f, -1.0f,  1.0f, 0.0f,
+        -1.0f,  1.0f, .0f,   0.0f, 1.0f,
+        -1.0f, -1.0f, .0f,  0.0f, 0.0f,
+         1.0f, -1.0f, .0f, 1.0f, 0.0f,
 
-        -1.0f,  1.0f,  0.0f, 1.0f,
-         1.0f, -1.0f,  1.0f, 0.0f,
-         1.0f,  1.0f,  1.0f, 1.0f
+        -1.0f,  1.0f, .0f,  0.0f, 1.0f,
+         1.0f, -1.0f, .0f, 1.0f, 0.0f,
+         1.0f,  1.0f, .0f, 1.0f, 1.0f
     };
 }
 

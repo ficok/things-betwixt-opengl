@@ -90,7 +90,7 @@ int main()
         glm::vec3(.0f, .0f, 4.f),
         glm::vec3(.0f, .0f, -4.f),
         // light cube position
-        glm::vec3(6.f, 6.f, 6.f)
+        glm::vec3(6.f)
     };
     // cube colors
     std::vector<glm::vec3> cubeColors =
@@ -119,7 +119,7 @@ int main()
     };
 
     glm::vec3 transparentCubeColor = glm::vec3(.9f, .9f, 1.f);
-    
+
     // creating a rectangle that represents the screen (for the framebuffer texture)
     unsigned int rectangleVAO, rectangleVBO;
     glGenVertexArrays(1, &rectangleVAO);
@@ -128,20 +128,21 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, rectangleVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(data::rectangleVertices), &data::rectangleVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glBindVertexArray(0);
 
     // creating a shader program
     Shader cubeShader("vertex.vs", "fragment.fs", "cube");
     Shader lightCubeShader("lightCube.vs", "lightCube.fs", "lightCube");
-    Shader screenShader("screen.vs", "screen.fs", "screen");
-    Shader hdrShader("hdr.vs", "hdr.fs", "hdr");
+    Shader blurShader("blur.vs", "blur.fs", "blur");
+    Shader bloomShader("bloom.vs", "bloom.fs", "bloom");
 
     // creating a custom framebuffer
-    Framebuffer colorInvertFramebuffer(RGB, 1, false);
-    Framebuffer hdrFramebuffer(RGBA, 1, false);
+    Framebuffer hdrFB(RGBA, 2, true, false);
+    Framebuffer pingpongFB1(RGBA, 1, false, false);
+    Framebuffer pingpongFB2(RGBA, 1, false, false);
 
     // initializing the light
     DirectionalLight directionalLight =
@@ -154,7 +155,7 @@ int main()
 
     PointLight pointLight =
     {
-        glm::vec3(6.f, 6.f, 6.f),
+        cubePositions.back(),
         glm::vec3(.0f),
 
         glm::vec3(.1f),
@@ -180,8 +181,12 @@ int main()
     };
 
     // sending render independent info to shaders
-    screenShader.activate();
-    screenShader.setInt("screen", 0);
+    blurShader.activate();
+    blurShader.setInt("image", 0);
+
+    bloomShader.activate();
+    bloomShader.setInt("scene", 0);
+    bloomShader.setInt("blurred", 1);
 
     // print some default values
     utils::printInfo(toggle::blend, toggle::cull, toggle::blinn, toggle::flashlightOn);
@@ -202,12 +207,9 @@ int main()
         // processing input from previous frame
         processInput(window);
 
-        // activating the custom framebuffer
-        // if (toggle::postprocessing)
-        //     colorInvertFramebuffer.activate();
-
-        if (toggle::hdr)
-            hdrFramebuffer.activate();
+        // drawing into the hdr framebuffer
+//        glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+        hdrFB.activate();
 
         // clearing buffers for the current frame
         glClearColor(.0f, .0f, .0f, 1.f);
@@ -290,34 +292,60 @@ int main()
             glBindVertexArray(0);
         }
 
-        // if (toggle::postprocessing)
-        // {
-            // activate the default framebuffer
-        //     colorInvertFramebuffer.deactivate();
-        //     glDisable(GL_DEPTH_TEST);
-        //     glClear(GL_COLOR_BUFFER_BIT);
+        // turn off hdr framebuffer
+//        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        hdrFB.deactivate();
 
-            // draw the screen rectangle with the texture from custom color buffer bit
-        //     screenShader.activate();
-        //     glBindVertexArray(rectangleVAO);
-        //     glActiveTexture(GL_TEXTURE0);
-        //     glBindTexture(GL_TEXTURE_2D, colorInvertFramebuffer._colorBuffer);
-        //     glDrawArrays(GL_TRIANGLES, 0, 6);
-        // }
-
-        if (toggle::hdr)
+        // blur bright fragments with a two-pass gaussian blur
+        blurShader.activate();
+        bool horizontal = true;
+        bool firstIteration = true;
+        unsigned nrPasses = 10; // double the nr of weights in blur shader
+        for (unsigned i = 0; i < nrPasses; ++i)
         {
-            hdrFramebuffer.deactivate();
-            glDisable(GL_DEPTH_TEST);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            if (horizontal)
+                pingpongFB1.activate();
+            else
+                pingpongFB2.activate();
 
-            hdrShader.activate();
-            hdrShader.setFloat("exposure", exposure);
-            glBindVertexArray(rectangleVAO);
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, hdrFramebuffer.colorBuffer[0]);
+            blurShader.setBool("horizontal", horizontal);
+
+            if (firstIteration) {
+                glBindTexture(GL_TEXTURE_2D, hdrFB.colorBuffers[1]);
+            } else {
+                if (horizontal)
+                    glBindTexture(GL_TEXTURE_2D, pingpongFB2.colorBuffers[0]);
+                else
+                    glBindTexture(GL_TEXTURE_2D, pingpongFB1.colorBuffers[0]);
+            }
+
+            glBindVertexArray(rectangleVAO);
             glDrawArrays(GL_TRIANGLES, 0, 6);
+            glBindVertexArray(0);
+
+            horizontal = !horizontal;
+            if (firstIteration)
+                firstIteration = !firstIteration;
         }
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        // render floating point color buffer to a 2D rectangle
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        bloomShader.activate();
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, hdrFB.colorBuffers[0]);
+        glActiveTexture(GL_TEXTURE1);
+        if (horizontal)
+            glBindTexture(GL_TEXTURE_2D, pingpongFB2.colorBuffers[0]);
+        else
+            glBindTexture(GL_TEXTURE_2D, pingpongFB1.colorBuffers[0]);
+
+        bloomShader.setBool("bloom", toggle::bloom);
+        bloomShader.setFloat("exposure", exposure);
+        glBindVertexArray(rectangleVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glBindVertexArray(0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -326,6 +354,9 @@ int main()
     glDeleteVertexArrays(1, &cubeVAO);
     glDeleteBuffers(1, &cubeVBO);
     cubeShader.del();
+    lightCubeShader.del();
+    blurShader.del();
+    bloomShader.del();
     // cleanly clearing glfw resources
     glfwTerminate();
 }
@@ -442,16 +473,18 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     // exposure
     if (key == GLFW_KEY_Q && action == GLFW_PRESS)
     {
-        exposure -= .005f;
-        if (exposure < .0f)
-            exposure = .0f;
+        if (exposure - .005f < .005f)
+            exposure = .005f;
+        else
+            exposure -= .005f;
         std::cout << "INFO: exposure: " << exposure << "\n";
     }
     if (key == GLFW_KEY_E && action == GLFW_PRESS)
     {
-        exposure += .005f;
-        if (exposure > 1.f)
+        if (exposure + .005f > 1.f)
             exposure = 1.f;
+        else
+            exposure += .005f;
         std::cout << "INFO: exposure: " << exposure << "\n";
     }
 }

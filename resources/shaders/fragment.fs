@@ -1,6 +1,7 @@
 #version 330 core
 // out variables
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 BrightColor;
 // structures
 struct DirectionalLight
 {
@@ -60,6 +61,7 @@ uniform Spotlight spotlight;
 
 void main()
 {
+    vec3 humanEyeSensitivity = vec3(.2126, .7152, .0722);
     vec3 normal = normalize(Normal);
     vec3 viewDirection = normalize(viewPosition - FragmentPosition);
 
@@ -68,6 +70,12 @@ void main()
     result += calculatePoint(pointLight, normal, viewDirection, FragmentPosition);
     if (spotlight.on)
         result += calculateSpotlight(spotlight, normal, viewDirection, FragmentPosition);
+
+    float brightness = dot(result, humanEyeSensitivity);
+    if (brightness > 1.)
+        BrightColor = vec4(result, alpha);
+    else
+        BrightColor = vec4(.0, .0, .0, 1.);
 
     FragColor = vec4(result, alpha);
 }
