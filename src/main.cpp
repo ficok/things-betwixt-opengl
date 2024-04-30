@@ -207,7 +207,8 @@ int main()
         processInput(window);
 
         // drawing into the hdr framebuffer
-        hdrFB.activate();
+        if (settings::bloom)
+            hdrFB.activate();
 
         // clearing buffers for the current frame
         glClearColor(.0f, .0f, .0f, 1.f);
@@ -290,49 +291,50 @@ int main()
             glBindVertexArray(0);
         }
 
-        // turn off hdr framebuffer
-//        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        hdrFB.deactivate();
-
-        // blur bright fragments with a two-pass gaussian blur
-        blurShader.activate();
-        bool horizontal = true;
-        bool firstIteration = true;
-        unsigned nrPasses = 10; // double the nr of weights in blur shader
-        for (unsigned i = 0; i < nrPasses; ++i)
+        if (settings::bloom)
         {
-            horizontal ? pingpongFB1.activate() : pingpongFB2.activate();
+            // turn off hdr framebuffer
+            hdrFB.deactivate();
 
+            // blur bright fragments with a two-pass gaussian blur
+            blurShader.activate();
+            bool horizontal = true;
+            bool firstIteration = true;
+            unsigned nrPasses = 10; // double the nr of weights in blur shader
+            for (unsigned i = 0; i < nrPasses; ++i) {
+                horizontal ? pingpongFB1.activate() : pingpongFB2.activate();
+
+                glActiveTexture(GL_TEXTURE0);
+                blurShader.setBool("horizontal", horizontal);
+
+                glBindTexture(GL_TEXTURE_2D,
+                              firstIteration ? hdrFB.colorBuffers[1] :
+                              (horizontal ? pingpongFB2.colorBuffers[0] : pingpongFB1.colorBuffers[0]));
+
+                glBindVertexArray(rectangleVAO);
+                glDrawArrays(GL_TRIANGLES, 0, 6);
+                glBindVertexArray(0);
+
+                horizontal = !horizontal;
+                if (firstIteration)
+                    firstIteration = false;
+
+                horizontal ? pingpongFB1.deactivate() : pingpongFB2.deactivate();
+            }
+
+            // render floating point color buffer to a 2D rectangle
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            bloomShader.activate();
             glActiveTexture(GL_TEXTURE0);
-            blurShader.setBool("horizontal", horizontal);
-
-            glBindTexture(GL_TEXTURE_2D,
-                          firstIteration ? hdrFB.colorBuffers[1] :
-                                                 (horizontal ? pingpongFB2.colorBuffers[0] : pingpongFB1.colorBuffers[0]));
-
+            glBindTexture(GL_TEXTURE_2D, hdrFB.colorBuffers[0]);
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, horizontal ? pingpongFB2.colorBuffers[0] : pingpongFB1.colorBuffers[0]);
+            bloomShader.setBool("bloom", settings::bloom);
+            bloomShader.setFloat("exposure", settings::exposure);
             glBindVertexArray(rectangleVAO);
             glDrawArrays(GL_TRIANGLES, 0, 6);
             glBindVertexArray(0);
-
-            horizontal = !horizontal;
-            if (firstIteration)
-                firstIteration = false;
-
-            horizontal ? pingpongFB1.deactivate() : pingpongFB2.deactivate();
         }
-
-        // render floating point color buffer to a 2D rectangle
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        bloomShader.activate();
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, hdrFB.colorBuffers[0]);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, horizontal ? pingpongFB2.colorBuffers[0] : pingpongFB1.colorBuffers[0]);
-        bloomShader.setBool("bloom", settings::bloom);
-        bloomShader.setFloat("exposure", settings::exposure);
-        glBindVertexArray(rectangleVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-        glBindVertexArray(0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -453,8 +455,8 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     // toggle custom framebuffer and post-processing
     if (key == GLFW_KEY_I && action == GLFW_PRESS)
     {
-        settings::postprocessing = !settings::postprocessing;
-        std::cout << "INFO: post-processing " << (settings::postprocessing ? "activated.\n" : "deactivated.\n");
+        settings::bloom = !settings::bloom;
+        std::cout << "INFO: bloom is " << (settings::bloom ? "activated.\n" : "deactivated.\n");
     }
 
     // exposure

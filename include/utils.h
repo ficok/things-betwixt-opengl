@@ -61,8 +61,8 @@ namespace utils
             "- flashlight is " << (settings::flashlightOn ? "on;\n" : "off;\n") <<
             "- face culling is " << (settings::cull ? "on;\n" : "off;\n") <<
             "- transparency is " << (settings::blend ? "on;\n" : "off;\n") <<
-            "- using " << (settings::blinn ? "blinn-phong's model.\n" : "phong's model.\n") <<
-            "- exposure is " << settings::exposure << " " <<
+            "- using " << (settings::blinn ? "blinn-phong's model;\n" : "phong's model;\n") <<
+            "- exposure is " << settings::exposure << ";\n" <<
             "- bloom is " << (settings::bloom ? "on.\n" : "off.\n") <<
             "----------\n\n";
     }
