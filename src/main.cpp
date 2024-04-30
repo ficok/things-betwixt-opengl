@@ -89,7 +89,7 @@ int main()
         glm::vec3(.0f, .0f, 4.f),
         glm::vec3(.0f, .0f, -4.f),
         // light cube position
-        glm::vec3(6.f)
+        glm::vec3(0.f)
     };
     // cube colors
     std::vector<glm::vec3> cubeColors =
@@ -101,12 +101,12 @@ int main()
         glm::vec3(.0f, .0f, 1.f), // +z: blue
         glm::vec3(.0f, .0f, .5f), // -z: darkblue
         // light cube color
-        glm::vec3(100.f)
+        glm::vec3(10.f, 10.f, 3.f)
     };
 
     std::vector<glm::vec3> transparentCubePositions =
     {
-        glm::vec3(.0f),
+        // glm::vec3(.0f),
         glm::vec3(2.f, 0.f, 2.0f),
         glm::vec3(-2.f, 0.f, 2.0f),
         glm::vec3(2.f, 0.f, -2.0f),
@@ -158,8 +158,8 @@ int main()
         glm::vec3(.0f),
 
         glm::vec3(.0f),
-        glm::vec3(.2f),
-        glm::vec3(1.f),
+        glm::vec3(.6f, .6f, .3f),
+        glm::vec3(1.f, 1.f, .3f),
 
         1.f, .09f, .032f
     };
