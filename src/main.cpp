@@ -315,7 +315,7 @@ int main()
             hdrShader.setFloat("exposure", exposure);
             glBindVertexArray(rectangleVAO);
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, hdrFramebuffer._colorBuffer[0]);
+            glBindTexture(GL_TEXTURE_2D, hdrFramebuffer.colorBuffer[0]);
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }
 

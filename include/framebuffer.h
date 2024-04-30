@@ -17,9 +17,9 @@ class Framebuffer
 {
 private:
     unsigned int _rbo;
-public:
     unsigned int _fbo;
-    unsigned int _colorBuffer[MAX_COLOR_BUFFERS];
+public:
+    unsigned int colorBuffer[MAX_COLOR_BUFFERS];
 
     Framebuffer(ImageType type, unsigned int nrColorBuffers, bool stencil)
     {
@@ -28,11 +28,11 @@ public:
         glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
 
         // create a texture which will serve as a color buffer
-        glGenTextures(nrColorBuffers, _colorBuffer);
+        glGenTextures(nrColorBuffers, colorBuffer);
 
         for (unsigned i = 0; i < nrColorBuffers; ++i)
         {
-            glBindTexture(GL_TEXTURE_2D, _colorBuffer[i]);
+            glBindTexture(GL_TEXTURE_2D, colorBuffer[i]);
             switch (type) {
                 case RGB:
                     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, S_WIDTH, S_HEIGHT,
@@ -46,7 +46,7 @@ public:
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0+i, GL_TEXTURE_2D, _colorBuffer[i], 0);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0+i, GL_TEXTURE_2D, colorBuffer[i], 0);
         }
 
         // generate and configure a render buffer object for depth and stencil
