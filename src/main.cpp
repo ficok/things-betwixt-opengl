@@ -188,7 +188,7 @@ int main()
     bloomShader.setInt("blurred", 1);
 
     // print some default values
-    utils::printInfo(settings::blend, settings::cull, settings::blinn, settings::flashlightOn);
+    utils::printSettings();
 
     // render loop
     while (!glfwWindowShouldClose(window))

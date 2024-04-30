@@ -13,6 +13,22 @@
 #define S_HEIGHT 1500
 #define TITLE "Things betwixt"
 
+// variables that toggle states and variables that are used for values
+namespace settings
+{
+    // values
+    float exposure = .05f;
+
+    // toggles
+    bool flashlightOn = false;
+    bool blinn = true;
+    bool cull = false;
+    bool blend = true;
+    bool postprocessing = false;
+    bool hdr = true;
+    bool bloom = true;
+}
+
 // utility functions
 namespace utils
 {
@@ -20,7 +36,7 @@ namespace utils
     std::string readFile(const std::string &path);
     std::string shadersDir(const std::string &path);
     std::string objectsDir(const std::string &path);
-    void printInfo(bool blend, bool cull, bool blinn, bool flashlightOn);
+    void printSettings();
 
     // definitions
     std::string readFile(const std::string &path) {
@@ -38,33 +54,21 @@ namespace utils
         return "resources/objects/" + path;
     }
 
-    void printInfo(const bool blend, const bool cull, const bool blinn, const bool flashlightOn)
+    void printSettings()
     {
         std::cout <<
             "INFO: default settings:\n" <<
-            "- flashlight is " << (flashlightOn ? "on;\n" : "off;\n") <<
-            "- face culling is " << (cull ? "on;\n" : "off;\n") <<
-            "- transparency is " << (blend ? "on;\n" : "off;\n") <<
-            "- using " << (blinn ? "blinn-phong's model.\n" : "phong's model.\n") <<
+            "- flashlight is " << (settings::flashlightOn ? "on;\n" : "off;\n") <<
+            "- face culling is " << (settings::cull ? "on;\n" : "off;\n") <<
+            "- transparency is " << (settings::blend ? "on;\n" : "off;\n") <<
+            "- using " << (settings::blinn ? "blinn-phong's model.\n" : "phong's model.\n") <<
+            "- exposure is " << settings::exposure << " " <<
+            "- bloom is " << (settings::bloom ? "on.\n" : "off.\n") <<
             "----------\n\n";
     }
 }
 
-// variables that indicate the toggle state
-namespace settings
-{
-    // values
-    float exposure = .05f;
 
-    // toggles
-    bool flashlightOn = false;
-    bool blinn = true;
-    bool cull = false;
-    bool blend = true;
-    bool postprocessing = false;
-    bool hdr = true;
-    bool bloom = true;
-}
 
 // variables containing vertex information
 namespace data
