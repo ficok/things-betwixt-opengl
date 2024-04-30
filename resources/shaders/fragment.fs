@@ -73,7 +73,7 @@ void main()
 
     float brightness = dot(result, humanEyeSensitivity);
     if (brightness > 1.)
-        BrightColor = vec4(result, alpha);
+        BrightColor = vec4(result, 1.);
     else
         BrightColor = vec4(.0, .0, .0, 1.);
 

@@ -147,8 +147,8 @@ int main()
     DirectionalLight directionalLight =
     {
         glm::vec3(.0f, -1.f, .0f),
-        glm::vec3(.05f),
-        glm::vec3(.2f),
+        glm::vec3(.007f),
+        glm::vec3(.007f),
         glm::vec3(1.f)
     };
 
@@ -157,8 +157,8 @@ int main()
         cubePositions.back(),
         glm::vec3(.0f),
 
-        glm::vec3(.1f),
-        glm::vec3(1.f),
+        glm::vec3(.0f),
+        glm::vec3(.2f),
         glm::vec3(1.f),
 
         1.f, .09f, .032f
@@ -283,7 +283,7 @@ int main()
             model = glm::translate(model, transparentCubePositions[i]);
             model = glm::scale(model, glm::vec3(.5f));
             cubeShader.setVec3("color", transparentCubeColor);
-            cubeShader.setFloat("alpha", .5f);
+            cubeShader.setFloat("alpha", .2f);
             cubeShader.setMat4("model", model);
 
             glBindVertexArray(cubeVAO);
