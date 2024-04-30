@@ -51,8 +51,12 @@ namespace utils
 }
 
 // variables that indicate the toggle state
-namespace toggle
+namespace settings
 {
+    // values
+    float exposure = .05f;
+
+    // toggles
     bool flashlightOn = false;
     bool blinn = true;
     bool cull = false;
