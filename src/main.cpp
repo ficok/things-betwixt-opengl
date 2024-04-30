@@ -140,8 +140,8 @@ int main()
     Shader hdrShader("hdr.vs", "hdr.fs", "hdr");
 
     // creating a custom framebuffer
-    Framebuffer colorInvertFramebuffer(RGB);
-    Framebuffer hdrFramebuffer(RGBA);
+    Framebuffer colorInvertFramebuffer(RGB, 1, false);
+    Framebuffer hdrFramebuffer(RGBA, 1, false);
 
     // initializing the light
     DirectionalLight directionalLight =
@@ -315,7 +315,7 @@ int main()
             hdrShader.setFloat("exposure", exposure);
             glBindVertexArray(rectangleVAO);
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, hdrFramebuffer._colorBuffer);
+            glBindTexture(GL_TEXTURE_2D, hdrFramebuffer._colorBuffer[0]);
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }
 
