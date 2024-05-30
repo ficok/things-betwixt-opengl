@@ -22,7 +22,6 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 | Skybox                       | None    | None     | -                                                       |
 | HDR                          | Working | Done     | -                                                       |
 | Bloom                        | Working | Done     | -                                                       |
-| IMGUI with settings info     | None    | None     | -                                                       |
 
 ## To-do
 - [ ] finish this README
@@ -48,6 +47,7 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 - [x] bloom (30.04.2024.)
   - [x] framebuffers (29.04.2024.)
   - [x] hdr (29.04.2024.)
+- [ ] skybox
 - [ ] model class
 
 *Later on*

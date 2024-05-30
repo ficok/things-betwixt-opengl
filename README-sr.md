@@ -22,7 +22,6 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 | Skybox                          | Nema   | Nema     | -                                                   |
 | HDR                             | Radi   | Gotovo   | -                                                   |
 | Bloom                           | Radi   | Gotovo   | -                                                   |
-| IMGUI sa info o podesavanjima   | Nema   | Nema     | -                                                   |
 
 ## Preostali posao
 - [ ] dovrsi ovaj README
@@ -48,6 +47,7 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 - [x] bloom (30.04.2024.)
   - [x] framebuffers (29.04.2024.)
   - [x] hdr (29.04.2024.)
+- [ ] skybox
 - [ ] ucitavanje modela
 
 *Kasnije*
