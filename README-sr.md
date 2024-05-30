@@ -19,7 +19,7 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 | Blinn-Phong-ov model            | Radi   | Gotovo   | -                                                   |
 | Blending                        | Radi   | U izradi | Resenje nije dovoljno elegantno po meni.            |
 | Face culling                    | Radi   | Gotovo   | Izgleda lose jer su verteksi kocke lose definisani. |
-| Skybox                          | Nema   | Nema     | -                                                   |
+| Skybox                          | Radi   | Gotovo   | -                                                   |
 | HDR                             | Radi   | Gotovo   | -                                                   |
 | Bloom                           | Radi   | Gotovo   | -                                                   |
 
@@ -47,8 +47,5 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 - [x] bloom (30.04.2024.)
   - [x] framebuffers (29.04.2024.)
   - [x] hdr (29.04.2024.)
-- [ ] skybox
+- [x] skybox (30.5.2024.)
 - [ ] ucitavanje modela
-
-*Kasnije*
-- [ ] doradjivanje modela sa svicima i 'vodom'

@@ -19,7 +19,7 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 | Blinn-Phong's model          | Working | Done     | -                                                       |
 | Blending                     | Working | Ongoing  | The solution is not elegant enough imo.                 |
 | Face culling                 | Working | Done     | Looks broken because cube vertices were poorly defined. |
-| Skybox                       | None    | None     | -                                                       |
+| Skybox                       | Working | Done     | -                                                       |
 | HDR                          | Working | Done     | -                                                       |
 | Bloom                        | Working | Done     | -                                                       |
 
@@ -47,8 +47,5 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 - [x] bloom (30.04.2024.)
   - [x] framebuffers (29.04.2024.)
   - [x] hdr (29.04.2024.)
-- [ ] skybox
+- [x] skybox (30.5.2024.)
 - [ ] model class
-
-*Later on*
-- [ ] reworking the model with fireflies and 'water'
