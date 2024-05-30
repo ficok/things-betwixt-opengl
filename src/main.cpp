@@ -10,6 +10,7 @@
 #include <structures.h>
 #include <errors.h>
 #include <framebuffer.h>
+#include <skybox.h>
 
 // function declarations
 void processInput(GLFWwindow* window);
@@ -24,6 +25,10 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 Camera camera(glm::vec3(.0f, .0f, .0f));
 Frame frame = {.0f, .0f, .0f};
 Mouse mouse = {(double)S_WIDTH/2, (double)S_HEIGHT/2, true};
+
+
+unsigned int loadCubemap(std::vector<std::string> cubemap);
+
 
 int main()
 {
@@ -137,6 +142,7 @@ int main()
     Shader lightCubeShader("lightCube.vs", "lightCube.fs", "lightCube");
     Shader blurShader("blur.vs", "blur.fs", "blur");
     Shader bloomShader("bloom.vs", "bloom.fs", "bloom");
+    Shader skyboxShader("skybox.vs", "skybox.fs", "skybox");
 
     // creating a custom framebuffer
     Framebuffer hdrFB(RGBA, 2, true, false);
@@ -186,6 +192,20 @@ int main()
     bloomShader.activate();
     bloomShader.setInt("scene", 0);
     bloomShader.setInt("blurred", 1);
+
+    // skybox textures
+    std::vector<std::string> milkyway
+    {
+        "resources/textures/milkyway/right.jpg",
+        "resources/textures/milkyway/left.jpg",
+        "resources/textures/milkyway/front.jpg",
+        "resources/textures/milkyway/back.jpg",
+        "resources/textures/milkyway/top.jpg",
+        "resources/textures/milkyway/bottom.jpg",
+    };
+
+    // create a skybox
+    Skybox skybox({milkyway});
 
     // print some default values
     utils::printSettings();
@@ -275,6 +295,9 @@ int main()
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
 
+        // draw the skybox
+        skybox.draw(model, view, projection, skyboxShader);
+
         // drawing transparent objects last
         cubeShader.activate();
         for (int i = 0; i < (int)transparentCubePositions.size(); ++i)
@@ -334,6 +357,7 @@ int main()
             glBindVertexArray(rectangleVAO);
             glDrawArrays(GL_TRIANGLES, 0, 6);
             glBindVertexArray(0);
+
         }
 
         glfwSwapBuffers(window);

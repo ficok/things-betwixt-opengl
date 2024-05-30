@@ -44,7 +44,8 @@ include_directories(${CMAKE_BINARY_DIR}/configuration)
 include_directories(include/)
 add_executable(${PROJECT_NAME}
         ${SOURCES}
-        include/framebuffer.h)
+        include/framebuffer.h
+        include/skybox.h)
 
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 
