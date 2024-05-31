@@ -26,10 +26,6 @@ Camera camera(glm::vec3(.0f, .0f, .0f));
 Frame frame = {.0f, .0f, .0f};
 Mouse mouse = {(double)S_WIDTH/2, (double)S_HEIGHT/2, true};
 
-
-unsigned int loadCubemap(std::vector<std::string> cubemap);
-
-
 int main()
 {
     // glfw init and config
@@ -306,7 +302,7 @@ int main()
             model = glm::translate(model, transparentCubePositions[i]);
             model = glm::scale(model, glm::vec3(.5f));
             cubeShader.setVec3("color", transparentCubeColor);
-            cubeShader.setFloat("alpha", .2f);
+            cubeShader.setFloat("alpha", .5f);
             cubeShader.setMat4("model", model);
 
             glBindVertexArray(cubeVAO);
