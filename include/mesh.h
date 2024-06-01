@@ -21,6 +21,7 @@ struct Texture
 {
     unsigned int id;
     std::string type;
+    std::string path;
 };
 
 class Mesh
@@ -34,12 +35,10 @@ private:
     unsigned int VAO;
 
 public:
+    // copying only once. can be reduced to zero with move constructors. research
     Mesh(std::vector<Vertex>& vs, std::vector<Texture>& tex, std::vector<unsigned int>& ind)
+        : vertices(vs), textures(tex), indices(ind)
     {
-        vertices = vs;
-        textures = tex;
-        indices = ind;
-
         // sending vertex data to the GPU
         unsigned int VBO, EBO;
         glGenVertexArrays(1, &VAO);
