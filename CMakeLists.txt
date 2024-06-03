@@ -48,7 +48,8 @@ add_executable(${PROJECT_NAME}
         include/skybox.h
         include/model.h
         include/mesh.h
-        include/simple_shapes.h)
+        include/simple_shapes.h
+        include/callback_functions.h)
 
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 
