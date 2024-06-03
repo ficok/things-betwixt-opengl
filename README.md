@@ -12,16 +12,18 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 | Shader compiling and linking | Working | Done     | -                                                       |
 | Camera movement              | Working | Done     | -                                                       |
 | Camera looking               | Working | Done     | -                                                       |
-| Model loading                | None    | None     | -                                                       |
+| Model loading                | Working | Done     | -                                                       |
 | Point lighting               | Working | Done     | -                                                       |
 | Directional lighting         | Working | Done     | -                                                       |
 | Spotlight                    | Working | Done     | -                                                       |
 | Blinn-Phong's model          | Working | Done     | -                                                       |
 | Blending                     | Working | Ongoing  | The solution is not elegant enough imo.                 |
 | Face culling                 | Working | Done     | Looks broken because cube vertices were poorly defined. |
+| Skybox class                 | Working | Done     | -                                                       |
 | Skybox                       | Working | Done     | -                                                       |
 | HDR                          | Working | Done     | -                                                       |
 | Bloom                        | Working | Done     | -                                                       |
+| SimpleShapes class           | None    | Ongoing  | -                                                       |
 
 ## To-do
 - [ ] finish this README
@@ -48,4 +50,6 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
   - [x] framebuffers (29.04.2024.)
   - [x] hdr (29.04.2024.)
 - [x] skybox (30.5.2024.)
-- [ ] model class
+- [x] model class (3.6.2024.)
+- [ ] SimpleShapes class
+- [ ] water

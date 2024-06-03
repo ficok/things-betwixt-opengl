@@ -12,16 +12,18 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 | Shader kompilacija i linkovanje | Radi   | Gotovo   | -                                                   |
 | Camera kretanje                 | Radi   | Gotovo   | -                                                   |
 | Camera gledanje                 | Radi   | Gotovo   | -                                                   |
-| Model ucitavanje                | Nema   | Nema     | -                                                   |
+| Model ucitavanje                | Radi   | Gotovo   | -                                                   |
 | Point osvetljenje               | Radi   | Gotovo   | -                                                   |
 | Directional osvetljenje         | Radi   | Gotovo   | -                                                   |
 | Spotlight                       | Radi   | Gotovo   | -                                                   |
 | Blinn-Phong-ov model            | Radi   | Gotovo   | -                                                   |
 | Blending                        | Radi   | U izradi | Resenje nije dovoljno elegantno po meni.            |
 | Face culling                    | Radi   | Gotovo   | Izgleda lose jer su verteksi kocke lose definisani. |
+| Skybox klasa                    | Radi   | Gotovo   | -                                                   |
 | Skybox                          | Radi   | Gotovo   | -                                                   |
 | HDR                             | Radi   | Gotovo   | -                                                   |
 | Bloom                           | Radi   | Gotovo   | -                                                   |
+| SimpleShapes klasa              | Nema   | U izradi | -                                                   |
 
 ## Preostali posao
 - [ ] dovrsi ovaj README
@@ -48,4 +50,6 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
   - [x] framebuffers (29.04.2024.)
   - [x] hdr (29.04.2024.)
 - [x] skybox (30.5.2024.)
-- [ ] ucitavanje modela
+- [x] ucitavanje modela (3.6.2024.)
+- [ ] SimpleShapes klasa
+- [ ] voda
