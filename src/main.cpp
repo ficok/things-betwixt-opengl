@@ -2,7 +2,6 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <algorithm>
 
 #include <callback_functions.h>
 #include <utils.h>
@@ -243,6 +242,8 @@ int main()
             model = glm::scale(model, glm::vec3(.25f));
             lightCube.draw(model, view, projection, lightCubeShader);
         }
+
+        // fireflies
 
         // drawing water
         model = glm::mat4(1.f);
