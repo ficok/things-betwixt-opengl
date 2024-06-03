@@ -47,7 +47,8 @@ add_executable(${PROJECT_NAME}
         include/framebuffer.h
         include/skybox.h
         include/model.h
-        include/mesh.h)
+        include/mesh.h
+        include/simple_shapes.h)
 
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 

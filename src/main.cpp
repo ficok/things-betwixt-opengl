@@ -12,6 +12,7 @@
 #include <framebuffer.h>
 #include <skybox.h>
 #include <model.h>
+#include <simple_shapes.h>
 
 // function declarations
 void processInput(GLFWwindow* window);
@@ -59,26 +60,8 @@ int main()
     glCullFace(GL_BACK);
 
     // creating a cube
-    // configuring VBO and VAO
-    unsigned cubeVAO, cubeVBO;
-    glGenVertexArrays(1, &cubeVAO);
-    glBindVertexArray(cubeVAO);
-    glGenBuffers(1, &cubeVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(data::cubeVerticesWNormalsTextures),
-                 &data::cubeVerticesWNormalsTextures, GL_STATIC_DRAW);
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)nullptr);
-    glEnableVertexAttribArray(0);
-    // normal attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(3*sizeof(float)));
-    glEnableVertexAttribArray(1);
-    // texture attribute
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(6*sizeof(float)));
-    glEnableVertexAttribArray(2);
-    // unbinding buffers
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    SimpleShapes lightCube(CUBE);
+
     // cube positions
     std::vector<glm::vec3> lanternPositions =
     {
@@ -93,17 +76,7 @@ int main()
     glm::vec3 lanternLightColor = glm::vec3(5.f, 5.f, 1.f);
 
     // creating a rectangle that represents the screen (for the framebuffer texture)
-    unsigned int rectangleVAO, rectangleVBO;
-    glGenVertexArrays(1, &rectangleVAO);
-    glGenBuffers(1, &rectangleVBO);
-    glBindVertexArray(rectangleVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, rectangleVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(data::rectangleVertices), &data::rectangleVertices, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glBindVertexArray(0);
+    SimpleShapes screenRectangle(PLANE);
 
     // creating a shader program
     Shader modelShader("vertex.vs", "fragment.fs", "model");
@@ -271,33 +244,16 @@ int main()
         modelShader.setFloat("alpha", 1.f);
         modelShader.setFloat("material.shininess", 4.f);
         ThingsBetwixt.draw(modelShader);
-//        glBindVertexArray(cubeVAO);
-//        for (int i = 0; i < (int)cubePositions.size()-1; ++i)
-//        {
-//            model = glm::mat4(1.f);
-//            model = glm::translate(model, cubePositions[i]);
-//            modelShader.setVec3("color", cubeColors[i]);
-//            modelShader.setFloat("alpha", 1.f);
-//            modelShader.setMat4("model", model);
-//            // binding the vertex array and drawing
-//            glDrawArrays(GL_TRIANGLES, 0, 36);
-//        }
-//        glBindVertexArray(0);
 
         // drawing lantern lights
         lightCubeShader.activate();
-        lightCubeShader.setMat4("view", view);
-        lightCubeShader.setMat4("projection", projection);
         lightCubeShader.setVec3("color", lanternLightColor);
         for (unsigned int i = 0; i < settings::nrPointLights; ++i)
         {
             model = glm::mat4(1.f);
             model = glm::translate(model, lanternPositions[i]);
             model = glm::scale(model, glm::vec3(.25f));
-            lightCubeShader.setMat4("model", model);
-            glBindVertexArray(cubeVAO);
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-            glBindVertexArray(0);
+            lightCube.draw(model, view, projection, lightCubeShader);
         }
 
         // draw the skybox
@@ -339,9 +295,7 @@ int main()
                               firstIteration ? hdrFB.colorBuffers[1] :
                               (horizontal ? pingpongFB2.colorBuffers[0] : pingpongFB1.colorBuffers[0]));
 
-                glBindVertexArray(rectangleVAO);
-                glDrawArrays(GL_TRIANGLES, 0, 6);
-                glBindVertexArray(0);
+                screenRectangle.draw();
 
                 horizontal = !horizontal;
                 if (firstIteration)
@@ -359,9 +313,7 @@ int main()
             glBindTexture(GL_TEXTURE_2D, horizontal ? pingpongFB2.colorBuffers[0] : pingpongFB1.colorBuffers[0]);
             bloomShader.setBool("bloom", settings::bloom);
             bloomShader.setFloat("exposure", settings::exposure);
-            glBindVertexArray(rectangleVAO);
-            glDrawArrays(GL_TRIANGLES, 0, 6);
-            glBindVertexArray(0);
+            screenRectangle.draw();
 
         }
 
@@ -369,8 +321,8 @@ int main()
         glfwPollEvents();
     }
     // clearing resources
-    glDeleteVertexArrays(1, &cubeVAO);
-    glDeleteBuffers(1, &cubeVBO);
+    lightCube.del();
+    screenRectangle.del();
     modelShader.del();
     lightCubeShader.del();
     blurShader.del();
