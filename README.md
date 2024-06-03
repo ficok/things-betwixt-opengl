@@ -7,7 +7,7 @@ The `main.cpp` and most header files in `include` directory (except `stb_image.h
 repository. Everything else, including the structure of the repository, `CMake` file, `.gitignore` etc. was borrowed from the same repository.
 
 ## Where I got my resources
-Most models are from [this site](https://poly.pizza/). <br>
+Most models are from [this site](https://poly.pizza/) and [this site](https://sketchfab.com/feed). <br>
 Flowers:
 - (https://poly.pizza/m/dYQFgjU5Eqx)
 - (https://poly.pizza/m/eLVv17bTyB-)
@@ -15,9 +15,12 @@ Flowers:
 - (https://poly.pizza/m/fg5U0dl1Sd3)
 
 Trees:
-- ()
+- (https://sketchfab.com/3d-models/low-poly-tree-pack-ea6e844754da494a9c38501b4fff92ad)
+- (https://sketchfab.com/3d-models/low-poly-tree-concept-e815f8acd6d34528a82feef38d5af880)
+- (https://sketchfab.com/3d-models/tree-stump-14c5d090d54d47cd831c43244f82e242)
 
-- [Shrine]()
+Other:
+- [Shrine](https://sketchfab.com/3d-models/shrine-61c478f77ea14759b61dd8938e4015a6)
 - [Lantern](https://poly.pizza/m/37EufrdA2UB)
 - [Stone path](https://poly.pizza/m/0vAJVcMEFdv)
 - [Frogs](https://poly.pizza/m/cwyNyIba6WE)
