@@ -9,8 +9,8 @@
 
 // ignore warnings about unused parameters
 #define UNUSED(x)(void)x
-#define S_WIDTH  2000
-#define S_HEIGHT 1500
+#define S_WIDTH  1500
+#define S_HEIGHT 900
 #define TITLE "Things betwixt"
 
 // variables that toggle states and variables that are used for values

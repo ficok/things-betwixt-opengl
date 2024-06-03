@@ -20,6 +20,7 @@ Osim toga, sve ostalo je pozajmljeno iz istog repozitorijuma, uključujući stru
 - **Q i E** za smanjivanje ili povećavanje ekspozicije
 
 ## Screenshot
+[Demo video](https://youtu.be/peo56Z8w0GY). Postaviti kvalitet videa na 1080p.
 ![Things Betwixt](ThingsBetwixtScreenshot.png)
 
 ## Gde sam pronašao modele

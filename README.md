@@ -20,6 +20,7 @@ repository. Everything else, including the structure of the repository, `CMake` 
 - **Q and E** to decrease/increase exposure
 
 ## Screenshot
+[Demo video](https://youtu.be/peo56Z8w0GY). Set quality to 1080p.
 ![Things Betwixt](ThingsBetwixtScreenshot.png)
 
 ## Where I got my resources
