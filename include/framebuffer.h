@@ -19,11 +19,14 @@ private:
     unsigned int _fbo;
     unsigned int _rbo;
     unsigned int _colorBuffer;
+    int nrColorBuffers;
+    bool deleteRenderbuffer = false;
 public:
     unsigned int colorBuffers[MAX_COLOR_BUFFERS];
 
     Framebuffer(ImageType type, int nrColorBuffers, bool depth, bool stencil)
     {
+        this->nrColorBuffers = nrColorBuffers;
         // generate and bind this framebuffer
         glGenFramebuffers(1, &_fbo);
         glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
@@ -63,6 +66,7 @@ public:
         // generate and configure a render buffer object for depth and stencil
         if (depth)
         {
+            deleteRenderbuffer = true;
             if (stencil)
             {
                 glGenRenderbuffers(1, &_rbo);
@@ -104,6 +108,17 @@ public:
     void deactivate()
     const {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    void del()
+    const {
+        if (nrColorBuffers == 1)
+            glDeleteTextures(1, &_colorBuffer);
+        else
+            glDeleteTextures(nrColorBuffers, colorBuffers);
+        if (deleteRenderbuffer)
+        glDeleteRenderbuffers(1, &_rbo);
+        glDeleteFramebuffers(1, &_fbo);
     }
 };
 

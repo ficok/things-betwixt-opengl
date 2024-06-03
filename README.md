@@ -3,8 +3,24 @@
 An OpenGL project for the course Computer graphics in Faculty of Mathematics, University of Belgrade.
 
 ## Borrowed code
-The `main.cpp` and most header files in `include` directory (except `stb_image.h`) I wrote myself with help from [JoeyDeVrie's](https://github.com/JoeyDeVries/LearnOpenGL)
+The `main.cpp` and most header files in `include` directory (except `stb_image.h`) I wrote myself with help from [JoeyDeVries'](https://github.com/JoeyDeVries/LearnOpenGL)
 repository. Everything else, including the structure of the repository, `CMake` file, `.gitignore` etc. was borrowed from the same repository.
+
+## Keys
+- Movement: **W A S D** for forward, left, back, right; **Space** for up, **Shift** for down
+- **Escape** to quit
+- **F** to toggle flashlight
+- **- and =** to decrease/increase movement speed
+- **\[ and \]** to decrease/increase mouse sensitivity
+- **X** to invert x-axis; **Y** to invert y-axis
+- **C** to toggle face culling
+- **B** to toggle blending (transparency)
+- **P** to switch between Blinn-Phong and Phong lighting model
+- **I** to toggle bloom and hdr
+- **Q and E** to decrease/increase exposure
+
+## Screenshot
+![Things Betwixt](ThingsBetwixtScreenshot.png)
 
 ## Where I got my resources
 Most models are from [this site](https://poly.pizza/) and [this site](https://sketchfab.com/feed). <br>
@@ -47,7 +63,7 @@ Other:
 | SimpleShapes class           | Working | Done     | -                                                          |
 
 ## To-do
-- [x] finish this README
+- [x] finish this README (03.06.2024.)
 - [x] main and basic functionalities (12.04.2024.)
 - [x] draw a rectangle (12.04.2024.)
 - [x] draw a cube (12.04.2024.)
@@ -70,8 +86,8 @@ Other:
 - [x] bloom (30.04.2024.)
   - [x] framebuffers (29.04.2024.)
   - [x] hdr (29.04.2024.)
-- [x] skybox (30.5.2024.)
-- [x] model class (3.6.2024.)
-- [x] SimpleShapes class (3.6.2024.)
-- [x] water (3.6.2024).
-- [x] fireflies (3.6.2024.)
+- [x] skybox (30.05.2024.)
+- [x] model class (03.06.2024.)
+- [x] SimpleShapes class (03.06.2024.)
+- [x] water (03.06.2024).
+- [x] fireflies (03.06.2024.)

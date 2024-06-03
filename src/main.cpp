@@ -53,9 +53,7 @@ int main()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glCullFace(GL_BACK);
 
-
-
-    // cube positions
+    // lantern positions
     std::vector<glm::vec3> lanternPositions =
     {
         glm::vec3(12.635745, 1.897386, 43.799279),
@@ -282,7 +280,7 @@ int main()
             model = glm::scale(model, glm::vec3(.05f));
             lightCube.draw(model, view, projection, fireflyShader);
         }
-        // gazebo swarm
+        // shrine swarm
         for (unsigned int i = 1; i < 21; ++i) {
             model = glm::mat4(1.f);
             glm::vec3 offset = glm::vec3(glm::cos(frame.current * i / frame.last), glm::cos(frame.last * i / frame.delta) * glm::sin(frame.last * i),
@@ -348,13 +346,24 @@ int main()
         glfwPollEvents();
     }
     // clearing resources
+    // framebuffers
+    hdrFB.del();
+    pingpongFB1.del();
+    pingpongFB2.del();
+    // objects
     lightCube.del();
     screenRectangle.del();
+    water.del();
+    skybox.del();
+    ThingsBetwixt.del();
+    // shaders
     modelShader.del();
     lightCubeShader.del();
     blurShader.del();
     bloomShader.del();
     skyboxShader.del();
+    waterShader.del();
+    fireflyShader.del();
     // cleanly clearing glfw resources
     glfwTerminate();
 }

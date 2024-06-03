@@ -33,7 +33,7 @@ private:
     std::vector<Texture> textures;
     std::vector<unsigned int> indices;
 
-    unsigned int VAO;
+    unsigned int VAO, VBO, EBO;
 
 public:
     std::string shaderIdentifierPrefix;
@@ -42,7 +42,6 @@ public:
         : vertices(vs), textures(tex), indices(ind)
     {
         // sending vertex data to the GPU
-        unsigned int VBO, EBO;
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
         glGenBuffers(1, &EBO);
@@ -100,7 +99,9 @@ public:
             else
                 assert(false, "unknown texture type");
 
-            shader.setInt(shaderIdentifierPrefix + name + number, i);
+            name.insert(0, shaderIdentifierPrefix);
+            name.append(number);
+            shader.setInt(name, i);
             // setting the texture
             glBindTexture(GL_TEXTURE_2D, textures[i].id);
         }
@@ -110,6 +111,15 @@ public:
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
         glActiveTexture(GL_TEXTURE0);
+    }
+
+    void del()
+    const {
+        glDeleteBuffers(1, &VBO);
+        glDeleteBuffers(1, &EBO);
+        glDeleteVertexArrays(1, &VAO);
+        for (Texture tex: textures)
+            glDeleteTextures(1, &tex.id);
     }
 };
 

@@ -46,7 +46,6 @@ private:
         return textureID;
     }
 public:
-
     Skybox(std::vector<std::vector<std::string>> cubemaps)
     {
         // loading cubemap textures into texture vector
@@ -90,6 +89,14 @@ public:
         // set depth function back to default
         glDepthFunc(GL_LESS);
         glActiveTexture(GL_TEXTURE0);
+    }
+
+    void del()
+    const {
+        glDeleteBuffers(1, &skyboxVBO);
+        glDeleteVertexArrays(1, &skyboxVAO);
+        for (unsigned int tex: cubemapTextures)
+            glDeleteTextures(1, &tex);
     }
 
     // set a specific cubemap

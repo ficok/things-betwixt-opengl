@@ -1,8 +1,28 @@
 # ThingsBetwixt
 [README in english](README.md). <br>
-Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u Beogradu.
+Projekat za predmet Računarska grafika na Matematičkom fakultetu Univerziteta u Beogradu.
 
-## Gde sam pronasao modele
+## Odakle sam pozajmio kod
+Kod u `main.cpp` i u fajlovima iz `include` direktorijuma (osim `stb_image.h`) sam pisao sam, uz pomoć iz [JoeyDeVrie](https://github.com/JoeyDeVries/LearnOpenGL)-ovog repozitorijuma.
+Osim toga, sve ostalo je pozajmljeno iz istog repozitorijuma, uključujući strukturu repozitorijuma, `CMake` fajl, `.gitignore` itd.
+
+## Tasteri
+- Kretanje: **W A S D** za napred, levo, nazad, desno; **Space** za gore, **Shift** za dole
+- **Escape** za gašenje
+- **F** za paljenje ili gašenje lampe
+- **- i =** za smanjivanje ili povećavanje brzine kretanja
+- **\[ i \]** za smanjivanje ili povećavanje osetljivosti miša
+- **X** za invertovanje x ose, **Y** za invertovanje y ose
+- **C** za paljenje ili gašenje face culling
+- **B** za paljenje ili gašenje blending tj. transparentosti
+- **P** za menjanje izmedju BlinnPhong i Phong modela osvetljenja
+- **I** za paljenje ili gašenje bloom i HDR
+- **Q i E** za smanjivanje ili povećavanje ekspozicije
+
+## Screenshot
+![Things Betwixt](ThingsBetwixtScreenshot.png)
+
+## Gde sam pronašao modele
 Većina modela je sa [ovog sajta](https://poly.pizza/) i [ovog sajta](https://sketchfab.com/feed). <br>
 Cveće:
 - (https://poly.pizza/m/dYQFgjU5Eqx)
@@ -23,31 +43,27 @@ Ostalo:
 - [Trava](https://poly.pizza/m/eFUpFgjCf0p)
 - [Žbun](https://poly.pizza/m/TSbIxkDtxF)
 
-## Odakle sam pozajmio kod
-Kod u `main.cpp` i u fajlovima iz `include` direktorijuma (osim `stb_image.h`) sam pisao sam, uz pomoć iz [JoeyDeVrie]()-ovog repozitorijuma.
-Osim toga, sve ostalo je pozajmljeno iz istog repozitorijuma, uključujući strukturu repozitorijuma, `CMake` fajl, `.gitignore` itd.
-
 ## Progres
-| Funkcionalnost                  | Status | Progres  | Komentar                                            |
-|---------------------------------|--------|----------|-----------------------------------------------------|
-| Shader kompilacija i linkovanje | Radi   | Gotovo   | -                                                   |
-| Camera kretanje                 | Radi   | Gotovo   | -                                                   |
-| Camera gledanje                 | Radi   | Gotovo   | -                                                   |
-| Model ucitavanje                | Radi   | Gotovo   | -                                                   |
-| Point osvetljenje               | Radi   | Gotovo   | -                                                   |
-| Directional osvetljenje         | Radi   | Gotovo   | -                                                   |
-| Spotlight                       | Radi   | Gotovo   | -                                                   |
-| Blinn-Phong-ov model            | Radi   | Gotovo   | -                                                   |
-| Blending                        | Radi   | U izradi | Resenje nije dovoljno elegantno po meni.            |
-| Face culling                    | Radi   | Gotovo   | Izgleda lose jer su verteksi kocke lose definisani. |
-| Skybox klasa                    | Radi   | Gotovo   | -                                                   |
-| Skybox                          | Radi   | Gotovo   | -                                                   |
-| HDR                             | Radi   | Gotovo   | -                                                   |
-| Bloom                           | Radi   | Gotovo   | -                                                   |
-| SimpleShapes klasa              | Radi   | U izradi | -                                                   |
+| Funkcionalnost                  | Status | Progres | Komentar                                                        |
+|---------------------------------|--------|---------|-----------------------------------------------------------------|
+| Shader kompilacija i linkovanje | Radi   | Gotovo  | -                                                               |
+| Camera kretanje                 | Radi   | Gotovo  | -                                                               |
+| Camera gledanje                 | Radi   | Gotovo  | -                                                               |
+| Model učitavanje                | Radi   | Gotovo  | -                                                               |
+| Point osvetljenje               | Radi   | Gotovo  | -                                                               |
+| Directional osvetljenje         | Radi   | Gotovo  | -                                                               |
+| Spotlight                       | Radi   | Gotovo  | -                                                               |
+| Blinn-Phong-ov model            | Radi   | Gotovo  | -                                                               |
+| Blending                        | Radi   | Gotovo  | -                                                               |
+| Face culling                    | Radi   | Gotovo  | Moze da izgleda lose jer su neki verteksi lose definisani.      |
+| Skybox klasa                    | Radi   | Gotovo  | -                                                               |
+| Skybox                          | Radi   | Gotovo  | -                                                               |
+| HDR                             | Radi   | Gotovo  | -                                                               |
+| Bloom                           | Radi   | Gotovo  | -                                                               |
+| SimpleShapes klasa              | Radi   | Gotovo  | -                                                               |
 
 ## Preostali posao
-- [x] dovrsi ovaj README
+- [x] dovrsi ovaj README (03.06.2024.)
 - [x] main i osnovne funkcionalnosti (12.04.2024.)
 - [x] nacrtaj pravougaonik (12.04.2024.)
 - [x] nacrtaj kocku (12.04.2024.)
@@ -70,8 +86,8 @@ Osim toga, sve ostalo je pozajmljeno iz istog repozitorijuma, uključujući stru
 - [x] bloom (30.04.2024.)
   - [x] framebuffers (29.04.2024.)
   - [x] hdr (29.04.2024.)
-- [x] skybox (30.5.2024.)
-- [x] ucitavanje modela (3.6.2024.)
-- [x] SimpleShapes klasa
-- [x] voda
-- [x] svici
+- [x] skybox (30.05.2024.)
+- [x] ucitavanje modela (03.06.2024.)
+- [x] SimpleShapes klasa (03.06.2024.)
+- [x] voda (03.06.2024.)
+- [x] svici (03.06.2024.)

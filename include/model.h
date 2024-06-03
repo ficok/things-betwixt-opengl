@@ -45,6 +45,13 @@ public:
             mesh.shaderIdentifierPrefix = prefix;
     }
 
+    void del()
+    const {
+        // textures don't need to be deleted, because that is done inside mesh.del()
+        for (Mesh mesh: meshes)
+            mesh.del();
+    }
+
 private:
     // model data
     /* stores already loaded textures with efficient searching.
@@ -58,7 +65,8 @@ private:
         // creating the assimp importer
         Assimp::Importer importer;
         // importing model data
-        const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+        auto flags = aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace;
+        const aiScene* scene = importer.ReadFile(path, flags);
         // check for errors
         assert(!(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode),
                "failed to import model: " + std::string(importer.GetErrorString()));
