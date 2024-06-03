@@ -3,6 +3,7 @@
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <string>
 #include <vector>
 
 #include <shader.h>
@@ -35,6 +36,7 @@ private:
     unsigned int VAO;
 
 public:
+    std::string shaderIdentifierPrefix;
     // copying only once. can be reduced to zero with move constructors. research
     Mesh(std::vector<Vertex>& vs, std::vector<Texture>& tex, std::vector<unsigned int>& ind)
         : vertices(vs), textures(tex), indices(ind)
@@ -42,7 +44,6 @@ public:
         // sending vertex data to the GPU
         unsigned int VBO, EBO;
         glGenVertexArrays(1, &VAO);
-
         glGenBuffers(1, &VBO);
         glGenBuffers(1, &EBO);
 
@@ -51,8 +52,8 @@ public:
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
-        glBindBuffer(GL_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ARRAY_BUFFER, indices.size()*sizeof(indices[0]), &indices[0], GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, position)));
@@ -76,13 +77,14 @@ public:
     {
         // the number of each of the texture types differs across objects. this way
         // we find their exact numbers.
-        unsigned int nrDiffuse = 0;
-        unsigned int nrSpecular = 0;
-        unsigned int nrNormal = 0;
-        unsigned int nrHeight = 0;
+        unsigned int nrDiffuse = 1;
+        unsigned int nrSpecular = 1;
+        unsigned int nrNormal = 1;
+        unsigned int nrHeight = 1;
 
-        for (int i = 0; i < textures.size(); ++i)
+        for (unsigned int i = 0; i < textures.size(); ++i)
         {
+            glActiveTexture(GL_TEXTURE0 + i);
             // we need to construct the name that will be in the shader
             std::string name = textures[i].type;
             std::string number;
@@ -98,21 +100,17 @@ public:
             else
                 assert(false, "unknown texture type");
 
-            name.append(number);
-            // activating the ith texture
-            glActiveTexture(GL_TEXTURE0 + i);
-            shader.setInt(name, i);
+            shader.setInt(shaderIdentifierPrefix + name + number, i);
             // setting the texture
             glBindTexture(GL_TEXTURE_2D, textures[i].id);
         }
 
         // drawing from EBO
         glBindVertexArray(VAO);
-        glDrawElements(GL_TEXTURE_2D, indices.size(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
         glActiveTexture(GL_TEXTURE0);
     }
-
 };
 
 #endif //THINGSBETWIXT_MESH_H

@@ -11,6 +11,7 @@
 #include <errors.h>
 #include <framebuffer.h>
 #include <skybox.h>
+#include <model.h>
 
 // function declarations
 void processInput(GLFWwindow* window);
@@ -26,10 +27,6 @@ Camera camera(glm::vec3(.0f, .0f, .0f));
 Frame frame = {.0f, .0f, .0f};
 Mouse mouse = {(double)S_WIDTH/2, (double)S_HEIGHT/2, true};
 
-
-unsigned int loadCubemap(std::vector<std::string> cubemap);
-
-
 int main()
 {
     // glfw init and config
@@ -38,13 +35,11 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     // glfw window creation
-    // TODO: error handling
     GLFWwindow* window = glfwCreateWindow(S_WIDTH, S_HEIGHT, TITLE, nullptr, nullptr);
     assert(window, "ERROR [main]: window creation failed.");
     glfwMakeContextCurrent(window);
 
     // GLAD: loading all opengl function pointers
-    // TODO: error handling
     assert(gladLoadGLLoader((GLADloadproc) glfwGetProcAddress), "ERROR [main]: failed to initialize GLAD.");
 
     // configuring callback functions
@@ -94,7 +89,7 @@ int main()
         glm::vec3(.0f, .0f, 4.f),
         glm::vec3(.0f, .0f, -4.f),
         // light cube position
-        glm::vec3(0.f)
+        glm::vec3(1.f)
     };
     // cube colors
     std::vector<glm::vec3> cubeColors =
@@ -138,7 +133,7 @@ int main()
     glBindVertexArray(0);
 
     // creating a shader program
-    Shader cubeShader("vertex.vs", "fragment.fs", "cube");
+    Shader modelShader("vertex.vs", "fragment.fs", "model");
     Shader lightCubeShader("lightCube.vs", "lightCube.fs", "lightCube");
     Shader blurShader("blur.vs", "blur.fs", "blur");
     Shader bloomShader("bloom.vs", "bloom.fs", "bloom");
@@ -149,13 +144,17 @@ int main()
     Framebuffer pingpongFB1(RGBA, 1, false, false);
     Framebuffer pingpongFB2(RGBA, 1, false, false);
 
+    // importing models
+    Model ThingsBetwixt("resources/objects/ThingsBetwixt/ThingsBetwixtV2.1.obj");
+    ThingsBetwixt.setShaderTextureNamePrefix("material.");
+
     // initializing the light
     DirectionalLight directionalLight =
     {
         glm::vec3(.0f, -1.f, .0f),
         glm::vec3(.007f),
         glm::vec3(.007f),
-        glm::vec3(1.f)
+        glm::vec3(0.f)
     };
 
     PointLight pointLight =
@@ -165,7 +164,7 @@ int main()
 
         glm::vec3(.0f),
         glm::vec3(.6f, .6f, .3f),
-        glm::vec3(1.f, 1.f, .3f),
+        glm::vec3(.7f, .7f, .1f),
 
         1.f, .09f, .032f
     };
@@ -177,7 +176,7 @@ int main()
 
         glm::vec3(.0f),
         glm::vec3(1.f),
-        glm::vec3(1.f),
+        glm::vec3(.7f),
 
         1.f, .09f, .032f,
         glm::cos(glm::radians(5.f)),
@@ -236,51 +235,58 @@ int main()
 
         // everything that will be rendered goes below
         // activating the shader
-        cubeShader.activate();
+        modelShader.activate();
         // sending camera information to shader
-        cubeShader.setVec3("viewPosition", camera._position);
+        modelShader.setVec3("viewPosition", camera._position);
         // sending light information to shader
-        cubeShader.setDirectionalLight("directionalLight", directionalLight);
-        cubeShader.setPointLight("pointLight", pointLight);
+        modelShader.setDirectionalLight("directionalLight", directionalLight);
+        modelShader.setPointLight("pointLight", pointLight);
         spotlight.position = camera.position();
         spotlight.direction = camera.front();
         spotlight.on = settings::flashlightOn;
-        cubeShader.setSpotlight("spotlight", spotlight);
+        modelShader.setSpotlight("spotlight", spotlight);
 
         // indicate if we're using blinn-phong or phong
-        cubeShader.setBool("blinn", settings::blinn);
+        modelShader.setBool("blinn", settings::blinn);
 
         // sort transparent cube positions
-        std::sort(transparentCubePositions.begin(), transparentCubePositions.end(),
-            [cameraPosition = camera.position()](const glm::vec3 a, const glm::vec3 b)
-            {
-                float distanceA = glm::distance(a, cameraPosition);
-                float distanceB = glm::distance(b, cameraPosition);
-                return distanceA > distanceB;
-            }
-        );
+//        std::sort(transparentCubePositions.begin(), transparentCubePositions.end(),
+//            [cameraPosition = camera.position()](const glm::vec3 a, const glm::vec3 b)
+//            {
+//                float distanceA = glm::distance(a, cameraPosition);
+//                float distanceB = glm::distance(b, cameraPosition);
+//                return distanceA > distanceB;
+//            }
+//        );
 
         // updating the view and projection matrices
         glm::mat4 view = glm::mat4(1.f);
         view = camera.getViewMatrix();
         glm::mat4 projection =
-                glm::perspective(glm::radians(camera.fov()), (float)S_WIDTH/(float)S_HEIGHT, .1f, 100.f);
-        cubeShader.setMat4("view", view);
-        cubeShader.setMat4("projection", projection);
-        // drawing cubes
+                glm::perspective(glm::radians(camera.fov()), (float)S_WIDTH/(float)S_HEIGHT, .1f, 10000.f);
+        modelShader.setMat4("view", view);
+        modelShader.setMat4("projection", projection);
+        // drawing the model
         glm::mat4 model;
-        glBindVertexArray(cubeVAO);
-        for (int i = 0; i < (int)cubePositions.size()-1; ++i)
-        {
-            model = glm::mat4(1.f);
-            model = glm::translate(model, cubePositions[i]);
-            cubeShader.setVec3("color", cubeColors[i]);
-            cubeShader.setFloat("alpha", 1.f);
-            cubeShader.setMat4("model", model);
-            // binding the vertex array and drawing
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-        }
-        glBindVertexArray(0);
+        model = glm::mat4(1.f);
+        model = glm::translate(model, glm::vec3(.0f));
+        model = glm::scale(model, glm::vec3(2.f));
+        modelShader.setMat4("model", model);
+        modelShader.setFloat("alpha", 1.f);
+        modelShader.setFloat("material.shininess", 4.f);
+        ThingsBetwixt.draw(modelShader);
+//        glBindVertexArray(cubeVAO);
+//        for (int i = 0; i < (int)cubePositions.size()-1; ++i)
+//        {
+//            model = glm::mat4(1.f);
+//            model = glm::translate(model, cubePositions[i]);
+//            modelShader.setVec3("color", cubeColors[i]);
+//            modelShader.setFloat("alpha", 1.f);
+//            modelShader.setMat4("model", model);
+//            // binding the vertex array and drawing
+//            glDrawArrays(GL_TRIANGLES, 0, 36);
+//        }
+//        glBindVertexArray(0);
 
         // drawing the light cube
         lightCubeShader.activate();
@@ -299,20 +305,20 @@ int main()
         skybox.draw(model, view, projection, skyboxShader);
 
         // drawing transparent objects last
-        cubeShader.activate();
-        for (int i = 0; i < (int)transparentCubePositions.size(); ++i)
-        {
-            model = glm::mat4(1.f);
-            model = glm::translate(model, transparentCubePositions[i]);
-            model = glm::scale(model, glm::vec3(.5f));
-            cubeShader.setVec3("color", transparentCubeColor);
-            cubeShader.setFloat("alpha", .2f);
-            cubeShader.setMat4("model", model);
-
-            glBindVertexArray(cubeVAO);
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-            glBindVertexArray(0);
-        }
+//        modelShader.activate();
+//        for (int i = 0; i < (int)transparentCubePositions.size(); ++i)
+//        {
+//            model = glm::mat4(1.f);
+//            model = glm::translate(model, transparentCubePositions[i]);
+//            model = glm::scale(model, glm::vec3(.5f));
+//            modelShader.setVec3("color", transparentCubeColor);
+//            modelShader.setFloat("alpha", .2f);
+//            modelShader.setMat4("model", model);
+//
+//            glBindVertexArray(cubeVAO);
+//            glDrawArrays(GL_TRIANGLES, 0, 36);
+//            glBindVertexArray(0);
+//        }
 
         if (settings::bloom)
         {
@@ -366,10 +372,11 @@ int main()
     // clearing resources
     glDeleteVertexArrays(1, &cubeVAO);
     glDeleteBuffers(1, &cubeVBO);
-    cubeShader.del();
+    modelShader.del();
     lightCubeShader.del();
     blurShader.del();
     bloomShader.del();
+    skyboxShader.del();
     // cleanly clearing glfw resources
     glfwTerminate();
 }
@@ -401,7 +408,6 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-// TODO: comments
 void mouseCallback(GLFWwindow* window, double xpos, double ypos)
 {
     UNUSED(window);

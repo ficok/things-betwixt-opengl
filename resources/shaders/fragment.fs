@@ -43,6 +43,15 @@ struct Spotlight
 
     bool on;
 };
+
+struct Material
+{
+    sampler2D texture_diffuse1;
+    sampler2D texture_specular1;
+
+    float shininess;
+};
+
 // function declarations
 vec3 calculateDirectional(DirectionalLight directionalLight, vec3 normal, vec3 viewDirection);
 vec3 calculatePoint(PointLight pointLight, vec3 normal, vec3 viewDirection, vec3 fragmentPosition);
@@ -50,14 +59,17 @@ vec3 calculateSpotlight(Spotlight spotlight, vec3 normal, vec3 viewDirection, ve
 // in variables
 in vec3 Normal;
 in vec3 FragmentPosition;
+in vec2 texCoords;
 // uniform variables
 uniform vec3 viewPosition;
 uniform vec3 color;
 uniform float alpha;
 uniform bool blinn;
+
 uniform DirectionalLight directionalLight;
 uniform PointLight pointLight;
 uniform Spotlight spotlight;
+uniform Material material;
 
 void main()
 {
@@ -91,17 +103,17 @@ vec3 calculateDirectional(DirectionalLight light, vec3 normal, vec3 viewDirectio
     if (blinn)
     {
         vec3 halfway = normalize(lightDirection + viewDirection);
-        specularFactor = pow(max(dot(halfway, normal), .0f), 64.f);
+        specularFactor = pow(max(dot(halfway, normal), .0f), material.shininess*4.0f);
     }
     else
     {
         vec3 reflectionDirection = reflect(-lightDirection, normal);
-        specularFactor = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 8.0f);
+        specularFactor = pow(max(dot(viewDirection, reflectionDirection), 0.0f), material.shininess);
     }
     // calculating the light components
-    vec3 ambient = light.ambient * color;
-    vec3 diffuse = light.diffuse * diffuseFactor * color;
-    vec3 specular = light.specular * specularFactor * color;
+    vec3 ambient = light.ambient * vec3(texture(material.texture_diffuse1, texCoords));
+    vec3 diffuse = light.diffuse * diffuseFactor * vec3(texture(material.texture_diffuse1, texCoords));
+    vec3 specular = light.specular * specularFactor * vec3(texture(material.texture_specular1, texCoords).xxx);
 
     return (ambient + diffuse + specular);
 }
@@ -117,22 +129,22 @@ vec3 calculatePoint(PointLight light, vec3 normal, vec3 viewDirection, vec3 frag
     if (blinn)
     {
         vec3 halfway = normalize(lightDirection + viewDirection);
-        specularFactor = pow(max(dot(halfway, normal), .0f), 64.f);
+        specularFactor = pow(max(dot(halfway, normal), .0f), material.shininess * 4.0f);
     }
     else
     {
         vec3 reflectionDirection = reflect(-lightDirection, normal);
-        specularFactor = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 8.0f);
+        specularFactor = pow(max(dot(viewDirection, reflectionDirection), 0.0f), material.shininess);
     }
     // calculating attenuation
     float distance = length(light.position - fragmentPosition);
     float attenuation = 1.f / (light.constant + light.linear * distance + light.quadratic * distance * distance);
     // calculating light components
-    vec3 ambient = light.ambient * color * attenuation;
-    vec3 diffuse = light.diffuse * diffuseFactor * color * attenuation;
-    vec3 specular = light.specular * specularFactor * color * attenuation;
+    vec3 ambient = light.ambient * vec3(texture(material.texture_diffuse1, texCoords)) * attenuation;
+    vec3 diffuse = light.diffuse * diffuseFactor * vec3(texture(material.texture_diffuse1, texCoords)) * attenuation;
+    vec3 specular = light.specular * specularFactor * vec3(texture(material.texture_specular1, texCoords).xxx) * attenuation;
 
-    return ambient + diffuse + specular;
+    return (ambient + diffuse + specular);
 }
 
 vec3 calculateSpotlight(Spotlight light, vec3 normal, vec3 viewDirection, vec3 fragmentPosition)
@@ -143,15 +155,15 @@ vec3 calculateSpotlight(Spotlight light, vec3 normal, vec3 viewDirection, vec3 f
     float diffuseFactor = max(dot(normal, lightDirection), 0.0);
     // calculating the specular factor
     float specularFactor = 0.0f;
-   if (blinn)
+    if (blinn)
     {
         vec3 halfway = normalize(lightDirection + viewDirection);
-        specularFactor = pow(max(dot(halfway, normal), .0f), 64.f);
+        specularFactor = pow(max(dot(halfway, normal), .0f), material.shininess * 4.0f);
     }
     else
     {
         vec3 reflectionDirection = reflect(-lightDirection, normal);
-        specularFactor = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 8.0f);
+        specularFactor = pow(max(dot(viewDirection, reflectionDirection), 0.0f), material.shininess);
     }
     // attenuation
     float distance = length(light.position - fragmentPosition);
@@ -162,13 +174,13 @@ vec3 calculateSpotlight(Spotlight light, vec3 normal, vec3 viewDirection, vec3 f
     float intensity = clamp((theta - light.outerCutoff)/epsilon, 0.0f, 1.0f);
 
     // calculating the light components
-    vec3 ambient = light.ambient * color;
-    vec3 diffuse = light.diffuse * diffuseFactor * color;
-    vec3 specular = light.specular * specularFactor * color;
+    vec3 ambient = light.ambient * vec3(texture(material.texture_diffuse1, texCoords));
+    vec3 diffuse = light.diffuse * diffuseFactor * vec3(texture(material.texture_diffuse1, texCoords));
+    vec3 specular = light.specular * specularFactor * vec3(texture(material.texture_specular1, texCoords).xxx);
 
     ambient *= attenuation * intensity;
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;
 
-    return ambient + diffuse + specular;
+    return (ambient + diffuse + specular);
 }
