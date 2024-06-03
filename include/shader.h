@@ -87,7 +87,6 @@ public:
     void setPointLight(const std::string& name, PointLight& pointLight)
     {
         this->setVec3(name + ".position", pointLight.position);
-        this->setVec3(name + ".direction", pointLight.direction);
         this->setVec3(name + ".ambient", pointLight.ambient);
         this->setVec3(name + ".diffuse", pointLight.diffuse);
         this->setVec3(name + ".specular", pointLight.specular);

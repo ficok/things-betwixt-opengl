@@ -11,6 +11,7 @@
 #include <errors.h>
 #include <framebuffer.h>
 #include <skybox.h>
+#include <model.h>
 
 // function declarations
 void processInput(GLFWwindow* window);
@@ -34,13 +35,11 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     // glfw window creation
-    // TODO: error handling
     GLFWwindow* window = glfwCreateWindow(S_WIDTH, S_HEIGHT, TITLE, nullptr, nullptr);
     assert(window, "ERROR [main]: window creation failed.");
     glfwMakeContextCurrent(window);
 
     // GLAD: loading all opengl function pointers
-    // TODO: error handling
     assert(gladLoadGLLoader((GLADloadproc) glfwGetProcAddress), "ERROR [main]: failed to initialize GLAD.");
 
     // configuring callback functions
@@ -81,44 +80,17 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
     // cube positions
-    std::vector<glm::vec3> cubePositions =
+    std::vector<glm::vec3> lanternPositions =
     {
-        glm::vec3(4.f, .0f, .0f),
-        glm::vec3(-4.f, .0f, .0f),
-        glm::vec3(.0f, 4.f, .0f),
-        glm::vec3(.0f, -4.f, .0f),
-        glm::vec3(.0f, .0f, 4.f),
-        glm::vec3(.0f, .0f, -4.f),
-        // light cube position
-        glm::vec3(0.f)
+        glm::vec3(12.635745, 1.897386, 43.799279),
+        glm::vec3(8.716487, 1.055845, 22.247738),
+        glm::vec3(-7.843780, .644258, 5.800420),
+        glm::vec3(-20.519054, 19.660023, -32.730717),
+        glm::vec3(38.972025, 2.050676, 37.930135),
+        glm::vec3(-34.578686, 4.421967, 24.077633),
     };
-    // cube colors
-    std::vector<glm::vec3> cubeColors =
-    {
-        glm::vec3(.0f, 1.f, .0f), // +x: green
-        glm::vec3(.0f, .5f, .0f), // -x: dark green
-        glm::vec3(1.f, .0f, .0f), // +y: red
-        glm::vec3(.5f, .0f, .0f), // -y: dark red
-        glm::vec3(.0f, .0f, 1.f), // +z: blue
-        glm::vec3(.0f, .0f, .5f), // -z: darkblue
-        // light cube color
-        glm::vec3(10.f, 10.f, 3.f)
-    };
-
-    std::vector<glm::vec3> transparentCubePositions =
-    {
-        // glm::vec3(.0f),
-        glm::vec3(2.f, 0.f, 2.0f),
-        glm::vec3(-2.f, 0.f, 2.0f),
-        glm::vec3(2.f, 0.f, -2.0f),
-        glm::vec3(-2.f, 0.f, -2.0f),
-        glm::vec3(2.f, 2.f, .0f),
-        glm::vec3(-2.f, 2.f, .0f),
-        glm::vec3(2.f, -2.f, .0f),
-        glm::vec3(-2.f, -2.f, .0f)
-    };
-
-    glm::vec3 transparentCubeColor = glm::vec3(.9f, .9f, 1.f);
+    // lantern light color
+    glm::vec3 lanternLightColor = glm::vec3(5.f, 5.f, 1.f);
 
     // creating a rectangle that represents the screen (for the framebuffer texture)
     unsigned int rectangleVAO, rectangleVBO;
@@ -134,7 +106,7 @@ int main()
     glBindVertexArray(0);
 
     // creating a shader program
-    Shader cubeShader("vertex.vs", "fragment.fs", "cube");
+    Shader modelShader("vertex.vs", "fragment.fs", "model");
     Shader lightCubeShader("lightCube.vs", "lightCube.fs", "lightCube");
     Shader blurShader("blur.vs", "blur.fs", "blur");
     Shader bloomShader("bloom.vs", "bloom.fs", "bloom");
@@ -145,35 +117,42 @@ int main()
     Framebuffer pingpongFB1(RGBA, 1, false, false);
     Framebuffer pingpongFB2(RGBA, 1, false, false);
 
+    // importing models
+    Model ThingsBetwixt("resources/objects/ThingsBetwixt/ThingsBetwixtV2.1.obj");
+    ThingsBetwixt.setShaderTextureNamePrefix("material.");
+
     // initializing the light
     DirectionalLight directionalLight =
     {
         glm::vec3(.0f, -1.f, .0f),
         glm::vec3(.007f),
         glm::vec3(.007f),
-        glm::vec3(1.f)
+        glm::vec3(0.f)
     };
 
-    PointLight pointLight =
-    {
-        cubePositions.back(),
-        glm::vec3(.0f),
+    std::vector<PointLight> pointLights;
+    for (unsigned int i = 0; i < settings::nrPointLights; ++i) {
+        PointLight pl = {
+            lanternPositions[i],
 
-        glm::vec3(.0f),
-        glm::vec3(.6f, .6f, .3f),
-        glm::vec3(1.f, 1.f, .3f),
+            glm::vec3(.0f),
+             glm::vec3(.6f, .6f, .3f),
+            glm::vec3(.5f, .5f, .1f),
 
-        1.f, .09f, .032f
-    };
+            1.f, .09f, .032f
+        };
 
-    Spotlight spotlight =
+        pointLights.push_back(pl);
+    }
+
+    Spotlight flashlight =
     {
         camera.position(),
         camera.front(),
 
         glm::vec3(.0f),
         glm::vec3(1.f),
-        glm::vec3(1.f),
+        glm::vec3(.7f),
 
         1.f, .09f, .032f,
         glm::cos(glm::radians(5.f)),
@@ -181,7 +160,25 @@ int main()
         settings::flashlightOn
     };
 
+    Spotlight ErdtreeSpotlight =
+    {
+        glm::vec3(-6.9f, 27.0f, 21.33f),
+        glm::vec3(-0.39f, 0.755f, -0.92f),
+
+        glm::vec3(0.2f),
+        glm::vec3(0.8f),
+        glm::vec3(0.2f),
+
+        1.f, .0f, .0f,
+        glm::cos(glm::radians(35.f)),
+        glm::cos(glm::radians(45.f)),
+        true
+    };
+
     // sending render independent info to shaders
+    modelShader.activate();
+    modelShader.setInt("nrPointLights", settings::nrPointLights);
+
     blurShader.activate();
     blurShader.setInt("image", 0);
 
@@ -232,83 +229,95 @@ int main()
 
         // everything that will be rendered goes below
         // activating the shader
-        cubeShader.activate();
+        modelShader.activate();
         // sending camera information to shader
-        cubeShader.setVec3("viewPosition", camera._position);
-        // sending light information to shader
-        cubeShader.setDirectionalLight("directionalLight", directionalLight);
-        cubeShader.setPointLight("pointLight", pointLight);
-        spotlight.position = camera.position();
-        spotlight.direction = camera.front();
-        spotlight.on = settings::flashlightOn;
-        cubeShader.setSpotlight("spotlight", spotlight);
+        modelShader.setVec3("viewPosition", camera._position);
+        // sending lighting information to shader
+        modelShader.setDirectionalLight("directionalLight", directionalLight);
+        for (unsigned int i = 0; i < settings::nrPointLights; ++i)
+            modelShader.setPointLight("pointLight[" + std::to_string(i) + "]", pointLights[i]);
+        flashlight.position = camera.position();
+        flashlight.direction = camera.front();
+        flashlight.on = settings::flashlightOn;
+        modelShader.setSpotlight("flashlight", flashlight);
+        modelShader.setSpotlight("ErdtreeSpotlight", ErdtreeSpotlight);
 
         // indicate if we're using blinn-phong or phong
-        cubeShader.setBool("blinn", settings::blinn);
+        modelShader.setBool("blinn", settings::blinn);
 
         // sort transparent cube positions
-        std::sort(transparentCubePositions.begin(), transparentCubePositions.end(),
-            [cameraPosition = camera.position()](const glm::vec3 a, const glm::vec3 b)
-            {
-                float distanceA = glm::distance(a, cameraPosition);
-                float distanceB = glm::distance(b, cameraPosition);
-                return distanceA > distanceB;
-            }
-        );
+//        std::sort(transparentCubePositions.begin(), transparentCubePositions.end(),
+//            [cameraPosition = camera.position()](const glm::vec3 a, const glm::vec3 b)
+//            {
+//                float distanceA = glm::distance(a, cameraPosition);
+//                float distanceB = glm::distance(b, cameraPosition);
+//                return distanceA > distanceB;
+//            }
+//        );
 
         // updating the view and projection matrices
         glm::mat4 view = glm::mat4(1.f);
         view = camera.getViewMatrix();
         glm::mat4 projection =
-                glm::perspective(glm::radians(camera.fov()), (float)S_WIDTH/(float)S_HEIGHT, .1f, 100.f);
-        cubeShader.setMat4("view", view);
-        cubeShader.setMat4("projection", projection);
-        // drawing cubes
+                glm::perspective(glm::radians(camera.fov()), (float)S_WIDTH/(float)S_HEIGHT, .1f, 10000.f);
+        modelShader.setMat4("view", view);
+        modelShader.setMat4("projection", projection);
+        // drawing the model
         glm::mat4 model;
-        glBindVertexArray(cubeVAO);
-        for (int i = 0; i < (int)cubePositions.size()-1; ++i)
-        {
-            model = glm::mat4(1.f);
-            model = glm::translate(model, cubePositions[i]);
-            cubeShader.setVec3("color", cubeColors[i]);
-            cubeShader.setFloat("alpha", 1.f);
-            cubeShader.setMat4("model", model);
-            // binding the vertex array and drawing
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-        }
-        glBindVertexArray(0);
+        model = glm::mat4(1.f);
+        model = glm::translate(model, glm::vec3(.0f));
+        model = glm::scale(model, glm::vec3(4.f));
+        modelShader.setMat4("model", model);
+        modelShader.setFloat("alpha", 1.f);
+        modelShader.setFloat("material.shininess", 4.f);
+        ThingsBetwixt.draw(modelShader);
+//        glBindVertexArray(cubeVAO);
+//        for (int i = 0; i < (int)cubePositions.size()-1; ++i)
+//        {
+//            model = glm::mat4(1.f);
+//            model = glm::translate(model, cubePositions[i]);
+//            modelShader.setVec3("color", cubeColors[i]);
+//            modelShader.setFloat("alpha", 1.f);
+//            modelShader.setMat4("model", model);
+//            // binding the vertex array and drawing
+//            glDrawArrays(GL_TRIANGLES, 0, 36);
+//        }
+//        glBindVertexArray(0);
 
-        // drawing the light cube
+        // drawing lantern lights
         lightCubeShader.activate();
         lightCubeShader.setMat4("view", view);
         lightCubeShader.setMat4("projection", projection);
-        lightCubeShader.setVec3("color", cubeColors.back());
-        model = glm::mat4(1.f);
-        model = glm::translate(model, cubePositions.back());
-        model = glm::scale(model, glm::vec3(.35f));
-        lightCubeShader.setMat4("model", model);
-        glBindVertexArray(cubeVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
+        lightCubeShader.setVec3("color", lanternLightColor);
+        for (unsigned int i = 0; i < settings::nrPointLights; ++i)
+        {
+            model = glm::mat4(1.f);
+            model = glm::translate(model, lanternPositions[i]);
+            model = glm::scale(model, glm::vec3(.25f));
+            lightCubeShader.setMat4("model", model);
+            glBindVertexArray(cubeVAO);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+            glBindVertexArray(0);
+        }
 
         // draw the skybox
         skybox.draw(model, view, projection, skyboxShader);
 
         // drawing transparent objects last
-        cubeShader.activate();
-        for (int i = 0; i < (int)transparentCubePositions.size(); ++i)
-        {
-            model = glm::mat4(1.f);
-            model = glm::translate(model, transparentCubePositions[i]);
-            model = glm::scale(model, glm::vec3(.5f));
-            cubeShader.setVec3("color", transparentCubeColor);
-            cubeShader.setFloat("alpha", .5f);
-            cubeShader.setMat4("model", model);
-
-            glBindVertexArray(cubeVAO);
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-            glBindVertexArray(0);
-        }
+//        modelShader.activate();
+//        for (int i = 0; i < (int)transparentCubePositions.size(); ++i)
+//        {
+//            model = glm::mat4(1.f);
+//            model = glm::translate(model, transparentCubePositions[i]);
+//            model = glm::scale(model, glm::vec3(.5f));
+//            modelShader.setVec3("color", transparentCubeColor);
+//            modelShader.setFloat("alpha", .2f);
+//            modelShader.setMat4("model", model);
+//
+//            glBindVertexArray(cubeVAO);
+//            glDrawArrays(GL_TRIANGLES, 0, 36);
+//            glBindVertexArray(0);
+//        }
 
         if (settings::bloom)
         {
@@ -362,10 +371,11 @@ int main()
     // clearing resources
     glDeleteVertexArrays(1, &cubeVAO);
     glDeleteBuffers(1, &cubeVBO);
-    cubeShader.del();
+    modelShader.del();
     lightCubeShader.del();
     blurShader.del();
     bloomShader.del();
+    skyboxShader.del();
     // cleanly clearing glfw resources
     glfwTerminate();
 }
@@ -397,7 +407,6 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-// TODO: comments
 void mouseCallback(GLFWwindow* window, double xpos, double ypos)
 {
     UNUSED(window);

@@ -158,7 +158,6 @@ public:
 
     void printCameraInfo()
     {
-
         std::cout << "INFO [camera]: initiailization complete:\n"
                   << "- zoom: " << _zoom << "\n"
                   << "- speed: " << _speed << "\n"

@@ -18,13 +18,13 @@ namespace settings
 {
     // values
     float exposure = .05f;
+    int nrPointLights = 6;
 
     // toggles
     bool flashlightOn = false;
     bool blinn = true;
     bool cull = false;
     bool blend = true;
-    bool postprocessing = false;
     bool hdr = true;
     bool bloom = true;
 }
@@ -67,8 +67,6 @@ namespace utils
             "----------\n\n";
     }
 }
-
-
 
 // variables containing vertex information
 namespace data
