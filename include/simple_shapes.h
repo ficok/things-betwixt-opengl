@@ -36,8 +36,9 @@ public:
         glBindVertexArray(0);
     }
 
-    SimpleShapes(ShapeType type, std::string pathToTexture): shapeType(type)
+    SimpleShapes(ShapeType type, std::string pathToTexture, float alpha = 1.f): shapeType(type)
     {
+        this->alpha = alpha;
         loadTexture(pathToTexture);
         // generating array and buffer
         glGenVertexArrays(1, &VAO);
@@ -61,20 +62,31 @@ public:
     // SimpleShape draw function with matrices and shader
     void draw(glm::mat4& model, glm::mat4& view, glm::mat4& projection, Shader& shader)
     {
+        shader.activate();
         shader.setMat4("model", model);
         shader.setMat4("view", view);
         shader.setMat4("projection", projection);
+        shader.setVec3("waterColor", glm::vec3(.3f, .3f, .8f));
 
         if (this->usingTexture())
         {
             // activate texture
             glActiveTexture(GL_TEXTURE0);
-            // bind texture
-            glBindTexture(GL_TEXTURE_2D, this->texture);
-            // tell shader to draw the texture
+
+            // tell shader that is should draw the texture
             shader.setBool("usingTexture", true);
             // set the texture number to draw
-            shader.setInt("texture", 0);
+            shader.setInt("tex", 0);
+            // set the alpha
+            shader.setFloat("alpha", alpha);
+
+            // bind texture
+            glBindTexture(GL_TEXTURE_2D, this->texture);
+        }
+        else
+        {
+            shader.setBool("usingTexture", false);
+            shader.setFloat("alpha", alpha);
         }
 
         glBindVertexArray(VAO);
@@ -88,6 +100,8 @@ public:
                 break;
         }
         glBindVertexArray(0);
+        if (usingTexture())
+            glActiveTexture(GL_TEXTURE0);
     }
     // SimpleShape draw function that just draws from VAO
     void draw()
@@ -116,6 +130,7 @@ private:
     ShapeType shapeType;
     unsigned VBO, VAO;
     unsigned int texture = -1;
+    float alpha;
 
     // loads the cube's attributes
     void loadCube()
@@ -151,6 +166,7 @@ private:
         glGenTextures(1, &this->texture);
         glBindTexture(GL_TEXTURE_2D, this->texture);
 
+        std::cout << "INFO [SimpleShapes]: loading texture at path " << pathToTexture << ".\n";
         int width, height, nrChannels;
         unsigned char* data = stbi_load(pathToTexture.c_str(), &width, &height, &nrChannels, 0);
 
@@ -167,6 +183,7 @@ private:
 
             glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
             glGenerateMipmap(GL_TEXTURE_2D);
+            std::cout << "INFO [SimpleShapes]: loading succeeded.\n";
         }
         else
             std::cerr << "ERROR [SimpleShapes]: failed to load texture at path: " << pathToTexture << ".\n";

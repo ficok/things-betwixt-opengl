@@ -89,6 +89,7 @@ public:
         glBindVertexArray(0);
         // set depth function back to default
         glDepthFunc(GL_LESS);
+        glActiveTexture(GL_TEXTURE0);
     }
 
     // set a specific cubemap

@@ -59,8 +59,7 @@ int main()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glCullFace(GL_BACK);
 
-    // creating a cube
-    SimpleShapes lightCube(CUBE);
+
 
     // cube positions
     std::vector<glm::vec3> lanternPositions =
@@ -75,8 +74,7 @@ int main()
     // lantern light color
     glm::vec3 lanternLightColor = glm::vec3(5.f, 5.f, 1.f);
 
-    // creating a rectangle that represents the screen (for the framebuffer texture)
-    SimpleShapes screenRectangle(PLANE);
+
 
     // creating a shader program
     Shader modelShader("vertex.vs", "fragment.fs", "model");
@@ -84,6 +82,7 @@ int main()
     Shader blurShader("blur.vs", "blur.fs", "blur");
     Shader bloomShader("bloom.vs", "bloom.fs", "bloom");
     Shader skyboxShader("skybox.vs", "skybox.fs", "skybox");
+    Shader waterShader("water.vs", "water.fs", "water");
 
     // creating a custom framebuffer
     Framebuffer hdrFB(RGBA, 2, true, false);
@@ -93,6 +92,10 @@ int main()
     // importing models
     Model ThingsBetwixt("resources/objects/ThingsBetwixt/ThingsBetwixtV2.1.obj");
     ThingsBetwixt.setShaderTextureNamePrefix("material.");
+    SimpleShapes lightCube(CUBE);
+    SimpleShapes water(PLANE, "resources/textures/water_texture_02.png", .15f);
+    // creating a rectangle that represents the screen (for the framebuffer texture)
+    SimpleShapes screenRectangle(PLANE);
 
     // initializing the light
     DirectionalLight directionalLight =
@@ -173,7 +176,7 @@ int main()
     // create a skybox
     Skybox skybox({milkyway});
 
-    // print some default values
+    // print some default settings
     utils::printSettings();
 
     // render loop
@@ -218,16 +221,6 @@ int main()
         // indicate if we're using blinn-phong or phong
         modelShader.setBool("blinn", settings::blinn);
 
-        // sort transparent cube positions
-//        std::sort(transparentCubePositions.begin(), transparentCubePositions.end(),
-//            [cameraPosition = camera.position()](const glm::vec3 a, const glm::vec3 b)
-//            {
-//                float distanceA = glm::distance(a, cameraPosition);
-//                float distanceB = glm::distance(b, cameraPosition);
-//                return distanceA > distanceB;
-//            }
-//        );
-
         // updating the view and projection matrices
         glm::mat4 view = glm::mat4(1.f);
         view = camera.getViewMatrix();
@@ -256,24 +249,15 @@ int main()
             lightCube.draw(model, view, projection, lightCubeShader);
         }
 
+        // drawing water
+        model = glm::mat4(1.f);
+        model = glm::translate(model, glm::vec3(18.f, -.3f, 5.f));
+        model = glm::rotate(model, glm::radians(90.f), glm::vec3(1.f, 0.f, 0.f));
+        model = glm::scale(model, glm::vec3(20.f));
+        water.draw(model, view, projection, waterShader);
+
         // draw the skybox
         skybox.draw(model, view, projection, skyboxShader);
-
-        // drawing transparent objects last
-//        modelShader.activate();
-//        for (int i = 0; i < (int)transparentCubePositions.size(); ++i)
-//        {
-//            model = glm::mat4(1.f);
-//            model = glm::translate(model, transparentCubePositions[i]);
-//            model = glm::scale(model, glm::vec3(.5f));
-//            modelShader.setVec3("color", transparentCubeColor);
-//            modelShader.setFloat("alpha", .2f);
-//            modelShader.setMat4("model", model);
-//
-//            glBindVertexArray(cubeVAO);
-//            glDrawArrays(GL_TRIANGLES, 0, 36);
-//            glBindVertexArray(0);
-//        }
 
         if (settings::bloom)
         {
@@ -334,10 +318,6 @@ int main()
 
 void processInput(GLFWwindow* window)
 {
-    // closing the program
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-
     // camera movement
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camera.updatePosition(FORWARD, (float)frame.delta);
@@ -387,6 +367,11 @@ void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     UNUSED(window); UNUSED(scancode); UNUSED(mods);
+
+    // exit program
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+
     // toggle flashlight
     if (key == GLFW_KEY_F && action == GLFW_PRESS) {
         settings::flashlightOn = !settings::flashlightOn;
