@@ -23,7 +23,7 @@ An OpenGL project for the course Computer graphics in Faculty of Mathematics, Un
 | Skybox                       | Working | Done     | -                                                       |
 | HDR                          | Working | Done     | -                                                       |
 | Bloom                        | Working | Done     | -                                                       |
-| SimpleShapes class           | None    | Ongoing  | -                                                       |
+| SimpleShapes class           | Working | Ongoing  | -                                                       |
 
 ## To-do
 - [ ] finish this README

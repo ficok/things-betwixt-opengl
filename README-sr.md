@@ -23,7 +23,7 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 | Skybox                          | Radi   | Gotovo   | -                                                   |
 | HDR                             | Radi   | Gotovo   | -                                                   |
 | Bloom                           | Radi   | Gotovo   | -                                                   |
-| SimpleShapes klasa              | Nema   | U izradi | -                                                   |
+| SimpleShapes klasa              | Radi   | U izradi | -                                                   |
 
 ## Preostali posao
 - [ ] dovrsi ovaj README
