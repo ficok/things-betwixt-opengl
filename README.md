@@ -47,7 +47,7 @@ Other:
 | SimpleShapes class           | Working | Done     | -                                                          |
 
 ## To-do
-- [ ] finish this README
+- [x] finish this README
 - [x] main and basic functionalities (12.04.2024.)
 - [x] draw a rectangle (12.04.2024.)
 - [x] draw a cube (12.04.2024.)
