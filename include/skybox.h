@@ -7,7 +7,7 @@
 #include <stb_image.h>
 
 extern Camera camera;
-
+/* supports multiple skyboxes and cycling between them */
 class Skybox
 {
 private:

@@ -80,44 +80,17 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
     // cube positions
-    std::vector<glm::vec3> cubePositions =
+    std::vector<glm::vec3> lanternPositions =
     {
-        glm::vec3(4.f, .0f, .0f),
-        glm::vec3(-4.f, .0f, .0f),
-        glm::vec3(.0f, 4.f, .0f),
-        glm::vec3(.0f, -4.f, .0f),
-        glm::vec3(.0f, .0f, 4.f),
-        glm::vec3(.0f, .0f, -4.f),
-        // light cube position
-        glm::vec3(1.f)
+        glm::vec3(12.635745, 1.897386, 43.799279),
+        glm::vec3(8.716487, 1.055845, 22.247738),
+        glm::vec3(-7.843780, .644258, 5.800420),
+        glm::vec3(-20.519054, 19.660023, -32.730717),
+        glm::vec3(38.972025, 2.050676, 37.930135),
+        glm::vec3(-34.578686, 4.421967, 24.077633),
     };
-    // cube colors
-    std::vector<glm::vec3> cubeColors =
-    {
-        glm::vec3(.0f, 1.f, .0f), // +x: green
-        glm::vec3(.0f, .5f, .0f), // -x: dark green
-        glm::vec3(1.f, .0f, .0f), // +y: red
-        glm::vec3(.5f, .0f, .0f), // -y: dark red
-        glm::vec3(.0f, .0f, 1.f), // +z: blue
-        glm::vec3(.0f, .0f, .5f), // -z: darkblue
-        // light cube color
-        glm::vec3(10.f, 10.f, 3.f)
-    };
-
-    std::vector<glm::vec3> transparentCubePositions =
-    {
-        // glm::vec3(.0f),
-        glm::vec3(2.f, 0.f, 2.0f),
-        glm::vec3(-2.f, 0.f, 2.0f),
-        glm::vec3(2.f, 0.f, -2.0f),
-        glm::vec3(-2.f, 0.f, -2.0f),
-        glm::vec3(2.f, 2.f, .0f),
-        glm::vec3(-2.f, 2.f, .0f),
-        glm::vec3(2.f, -2.f, .0f),
-        glm::vec3(-2.f, -2.f, .0f)
-    };
-
-    glm::vec3 transparentCubeColor = glm::vec3(.9f, .9f, 1.f);
+    // lantern light color
+    glm::vec3 lanternLightColor = glm::vec3(5.f, 5.f, 1.f);
 
     // creating a rectangle that represents the screen (for the framebuffer texture)
     unsigned int rectangleVAO, rectangleVBO;
@@ -157,19 +130,22 @@ int main()
         glm::vec3(0.f)
     };
 
-    PointLight pointLight =
-    {
-        cubePositions.back(),
-        glm::vec3(.0f),
+    std::vector<PointLight> pointLights;
+    for (unsigned int i = 0; i < settings::nrPointLights; ++i) {
+        PointLight pl = {
+            lanternPositions[i],
 
-        glm::vec3(.0f),
-        glm::vec3(.6f, .6f, .3f),
-        glm::vec3(.7f, .7f, .1f),
+            glm::vec3(.0f),
+             glm::vec3(.6f, .6f, .3f),
+            glm::vec3(.5f, .5f, .1f),
 
-        1.f, .09f, .032f
-    };
+            1.f, .09f, .032f
+        };
 
-    Spotlight spotlight =
+        pointLights.push_back(pl);
+    }
+
+    Spotlight flashlight =
     {
         camera.position(),
         camera.front(),
@@ -184,7 +160,25 @@ int main()
         settings::flashlightOn
     };
 
+    Spotlight ErdtreeSpotlight =
+    {
+        glm::vec3(-6.9f, 27.0f, 21.33f),
+        glm::vec3(-0.39f, 0.755f, -0.92f),
+
+        glm::vec3(0.2f),
+        glm::vec3(0.8f),
+        glm::vec3(0.2f),
+
+        1.f, .0f, .0f,
+        glm::cos(glm::radians(35.f)),
+        glm::cos(glm::radians(45.f)),
+        true
+    };
+
     // sending render independent info to shaders
+    modelShader.activate();
+    modelShader.setInt("nrPointLights", settings::nrPointLights);
+
     blurShader.activate();
     blurShader.setInt("image", 0);
 
@@ -238,13 +232,15 @@ int main()
         modelShader.activate();
         // sending camera information to shader
         modelShader.setVec3("viewPosition", camera._position);
-        // sending light information to shader
+        // sending lighting information to shader
         modelShader.setDirectionalLight("directionalLight", directionalLight);
-        modelShader.setPointLight("pointLight", pointLight);
-        spotlight.position = camera.position();
-        spotlight.direction = camera.front();
-        spotlight.on = settings::flashlightOn;
-        modelShader.setSpotlight("spotlight", spotlight);
+        for (unsigned int i = 0; i < settings::nrPointLights; ++i)
+            modelShader.setPointLight("pointLight[" + std::to_string(i) + "]", pointLights[i]);
+        flashlight.position = camera.position();
+        flashlight.direction = camera.front();
+        flashlight.on = settings::flashlightOn;
+        modelShader.setSpotlight("flashlight", flashlight);
+        modelShader.setSpotlight("ErdtreeSpotlight", ErdtreeSpotlight);
 
         // indicate if we're using blinn-phong or phong
         modelShader.setBool("blinn", settings::blinn);
@@ -270,7 +266,7 @@ int main()
         glm::mat4 model;
         model = glm::mat4(1.f);
         model = glm::translate(model, glm::vec3(.0f));
-        model = glm::scale(model, glm::vec3(2.f));
+        model = glm::scale(model, glm::vec3(4.f));
         modelShader.setMat4("model", model);
         modelShader.setFloat("alpha", 1.f);
         modelShader.setFloat("material.shininess", 4.f);
@@ -288,18 +284,21 @@ int main()
 //        }
 //        glBindVertexArray(0);
 
-        // drawing the light cube
+        // drawing lantern lights
         lightCubeShader.activate();
         lightCubeShader.setMat4("view", view);
         lightCubeShader.setMat4("projection", projection);
-        lightCubeShader.setVec3("color", cubeColors.back());
-        model = glm::mat4(1.f);
-        model = glm::translate(model, cubePositions.back());
-        model = glm::scale(model, glm::vec3(.35f));
-        lightCubeShader.setMat4("model", model);
-        glBindVertexArray(cubeVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
+        lightCubeShader.setVec3("color", lanternLightColor);
+        for (unsigned int i = 0; i < settings::nrPointLights; ++i)
+        {
+            model = glm::mat4(1.f);
+            model = glm::translate(model, lanternPositions[i]);
+            model = glm::scale(model, glm::vec3(.25f));
+            lightCubeShader.setMat4("model", model);
+            glBindVertexArray(cubeVAO);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+            glBindVertexArray(0);
+        }
 
         // draw the skybox
         skybox.draw(model, view, projection, skyboxShader);

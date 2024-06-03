@@ -30,7 +30,7 @@ public:
 
         /*
          * why did I use _colorBuffer for a single color buffer, and colorBuffers[] for multiple?
-         * it's simple: it didn't work any other way.
+         * - it didn't work any other way.
          */
         // create a texture which will serve as a color buffer
         nrColorBuffers == 1 ?
@@ -61,13 +61,17 @@ public:
             colorBuffers[0] = _colorBuffer;
 
         // generate and configure a render buffer object for depth and stencil
-        if (depth) {
-            if (stencil) {
+        if (depth)
+        {
+            if (stencil)
+            {
                 glGenRenderbuffers(1, &_rbo);
                 glBindRenderbuffer(GL_RENDERBUFFER, _rbo);
                 glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, S_WIDTH, S_HEIGHT);
                 glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _rbo);
-            } else {
+            }
+            else
+            {
                 glGenRenderbuffers(1, &_rbo);
                 glBindRenderbuffer(GL_RENDERBUFFER, _rbo);
                 glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, S_WIDTH, S_HEIGHT);
@@ -76,7 +80,8 @@ public:
         }
 
         // tell opengl which attachments we will use for rendering
-        if (nrColorBuffers > 1) {
+        if (nrColorBuffers > 1)
+        {
             unsigned attachments[nrColorBuffers];
             for (int i = 0; i < nrColorBuffers; ++i)
                 attachments[i] = GL_COLOR_ATTACHMENT0 + i;

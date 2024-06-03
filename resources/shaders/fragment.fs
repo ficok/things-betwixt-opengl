@@ -14,7 +14,6 @@ struct DirectionalLight
 struct PointLight
 {
     vec3 position;
-    vec3 direction;
 
     vec3 ambient;
     vec3 diffuse;
@@ -52,6 +51,8 @@ struct Material
     float shininess;
 };
 
+#define MAX_NR_POINT_LIGHTS 10
+
 // function declarations
 vec3 calculateDirectional(DirectionalLight directionalLight, vec3 normal, vec3 viewDirection);
 vec3 calculatePoint(PointLight pointLight, vec3 normal, vec3 viewDirection, vec3 fragmentPosition);
@@ -65,10 +66,12 @@ uniform vec3 viewPosition;
 uniform vec3 color;
 uniform float alpha;
 uniform bool blinn;
+uniform int nrPointLights;
 
 uniform DirectionalLight directionalLight;
-uniform PointLight pointLight;
-uniform Spotlight spotlight;
+uniform PointLight pointLight[MAX_NR_POINT_LIGHTS];
+uniform Spotlight flashlight;
+uniform Spotlight ErdtreeSpotlight;
 uniform Material material;
 
 void main()
@@ -77,12 +80,20 @@ void main()
     vec3 normal = normalize(Normal);
     vec3 viewDirection = normalize(viewPosition - FragmentPosition);
 
-    vec3 result = vec3(0.0f, 0.0f, 0.0f);
-    result += calculateDirectional(directionalLight, normal, viewDirection);
-    result += calculatePoint(pointLight, normal, viewDirection, FragmentPosition);
-    if (spotlight.on)
-        result += calculateSpotlight(spotlight, normal, viewDirection, FragmentPosition);
+    vec3 light = vec3(0.0f, 0.0f, 0.0f);
+    // directional light
+    light += calculateDirectional(directionalLight, normal, viewDirection);
+    // lantern lights
+    for (int i = 0; i < nrPointLights; ++i)
+        light += calculatePoint(pointLight[i], normal, viewDirection, FragmentPosition);
+    // flashlight
+    if (flashlight.on)
+        light += calculateSpotlight(flashlight, normal, viewDirection, FragmentPosition);
+    // erdtree spotlight
+    light += calculateSpotlight(ErdtreeSpotlight, normal, viewDirection, FragmentPosition);
 
+    vec3 result = light;
+    // determine whether to send to bright or regular color buffer
     float brightness = dot(result, humanEyeSensitivity);
     if (brightness > 1.)
         BrightColor = vec4(result, 1.);
