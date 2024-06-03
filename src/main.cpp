@@ -68,8 +68,6 @@ int main()
     // lantern light color
     glm::vec3 lanternLightColor = glm::vec3(5.f, 5.f, 1.f);
 
-
-
     // creating a shader program
     Shader modelShader("vertex.vs", "fragment.fs", "model");
     Shader lightCubeShader("lightCube.vs", "lightCube.fs", "lightCube");
@@ -77,6 +75,7 @@ int main()
     Shader bloomShader("bloom.vs", "bloom.fs", "bloom");
     Shader skyboxShader("skybox.vs", "skybox.fs", "skybox");
     Shader waterShader("water.vs", "water.fs", "water");
+    Shader fireflyShader("fireflies.vs", "fireflies.fs", "fireflies");
 
     // creating a custom framebuffer
     Framebuffer hdrFB(RGBA, 2, true, false);
@@ -143,6 +142,34 @@ int main()
         glm::cos(glm::radians(35.f)),
         glm::cos(glm::radians(45.f)),
         true
+    };
+
+
+    // firefly positions
+    std::vector<glm::vec3> fireflyPosition =
+    {
+        glm::vec3(16.f, 2.9f, 4.8f),
+        glm::vec3(18.f, 3.f, 5.24f),
+        glm::vec3(17.f, 4.f, 3.9f),
+        glm::vec3(18.f, 4.1f, 4.2f),
+        glm::vec3(18.f, 4.f, 5.1f),
+        glm::vec3(18.f, 3.f, 5.f),
+        glm::vec3(19.f, 3.7f, 4.7f),
+        glm::vec3(18.f, 3.3f, 4.1f),
+        glm::vec3(17.f, 3.f, 5.3f),
+        glm::vec3(16.f, 4.f, 4.f),
+        glm::vec3(18.f, 4.f, 4.f),
+        glm::vec3(14.1f, 4.f, 6.f),
+        glm::vec3(17.2f, 4.f, 6.f),
+        glm::vec3(13.4f, 4.f, 4.f),
+        glm::vec3(16.f, 4.f, 6.f),
+        glm::vec3(14.4f, 4.f, 4.f),
+        glm::vec3(15.f, 4.f, 7.f),
+        glm::vec3(14.2f, 4.f, 4.f),
+        glm::vec3(15.1f, 4.f, 8.f),
+        glm::vec3(13.8f, 4.f, 7.f),
+        glm::vec3(12.5f, 4.f, 6.f),
+
     };
 
     // sending render independent info to shaders
@@ -243,7 +270,27 @@ int main()
             lightCube.draw(model, view, projection, lightCubeShader);
         }
 
-        // fireflies
+        // drawing fireflies
+        fireflyShader.activate();
+        // lake swarm
+        lightCube.setColor(glm::vec3(5.f, 5.f, 1.f));
+        for (unsigned int i = 1; i < 21; ++i) {
+            model = glm::mat4(1.f);
+            glm::vec3 offset = glm::vec3(glm::cos(frame.current * i / frame.last), glm::cos(frame.current * i / frame.delta) * glm::sin(frame.current * i / frame.last),
+                                         glm::cos(frame.current * i / frame.last / 3));
+            model = glm::translate(model, fireflyPosition[i] + 2.f * offset);
+            model = glm::scale(model, glm::vec3(.05f));
+            lightCube.draw(model, view, projection, fireflyShader);
+        }
+        // gazebo swarm
+        for (unsigned int i = 1; i < 21; ++i) {
+            model = glm::mat4(1.f);
+            glm::vec3 offset = glm::vec3(glm::cos(frame.current * i / frame.last), glm::cos(frame.last * i / frame.delta) * glm::sin(frame.last * i),
+                                         glm::cos(frame.last * i / 3));
+            model = glm::translate(model, (fireflyPosition[i] + glm::vec3(-22.f, 0.f, -8.f)) + 2.f * offset);
+            model = glm::scale(model, glm::vec3(.05f));
+            lightCube.draw(model, view, projection, fireflyShader);
+        }
 
         // drawing water
         model = glm::mat4(1.f);

@@ -156,6 +156,11 @@ public:
         return _front;
     }
 
+    float getMovementSpeed()
+    const {
+        return this->_speed;
+    }
+
     void printCameraInfo()
     {
         std::cout << "INFO [camera]: initiailization complete:\n"

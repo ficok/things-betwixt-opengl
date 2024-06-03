@@ -59,14 +59,23 @@ public:
         glBindVertexArray(0);
     }
 
-    // SimpleShape draw function with matrices and shader
+    SimpleShapes(SimpleShapes& shape)
+    {
+        this->shapeType = shape.shapeType;
+        this->VAO = shape.VAO;
+        this->VBO = shape.VBO;
+        this->texture = shape.texture;
+        this->alpha = shape.alpha;
+    }
+
+    // SimpleShapes draw function with matrices and shader
     void draw(glm::mat4& model, glm::mat4& view, glm::mat4& projection, Shader& shader)
     {
         shader.activate();
         shader.setMat4("model", model);
         shader.setMat4("view", view);
         shader.setMat4("projection", projection);
-        shader.setVec3("waterColor", glm::vec3(.3f, .3f, .8f));
+        shader.setVec3("color", color);
 
         if (this->usingTexture())
         {
@@ -119,6 +128,11 @@ public:
         glBindVertexArray(0);
     }
 
+    void setColor(const glm::vec3& newColor)
+    {
+        this->color = newColor;
+    }
+
     // deletes VAO and VBO
     void del()
     {
@@ -131,6 +145,7 @@ private:
     unsigned VBO, VAO;
     unsigned int texture = -1;
     float alpha;
+    glm::vec3 color;
 
     // loads the cube's attributes
     void loadCube()

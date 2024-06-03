@@ -75,6 +75,12 @@ public:
         glDeleteShader(fragmentShader);
     }
 
+    Shader(Shader& shader)
+    {
+        this->_programID = shader._programID;
+        this->_programName = shader._programName;
+    }
+
     // setting uniform structs
     void setDirectionalLight(const std::string& name, DirectionalLight& directionalLight)
     {
