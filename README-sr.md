@@ -3,8 +3,29 @@
 Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u Beogradu.
 
 ## Gde sam pronasao modele
+Većina modela je sa [ovog sajta](https://poly.pizza/) i [ovog sajta](https://sketchfab.com/feed). <br>
+Cveće:
+- (https://poly.pizza/m/dYQFgjU5Eqx)
+- (https://poly.pizza/m/eLVv17bTyB-)
+- (https://poly.pizza/m/1baaAXcdzZ)
+- (https://poly.pizza/m/fg5U0dl1Sd3)
+
+Drveće:
+- (https://sketchfab.com/3d-models/low-poly-tree-pack-ea6e844754da494a9c38501b4fff92ad)
+- (https://sketchfab.com/3d-models/low-poly-tree-concept-e815f8acd6d34528a82feef38d5af880)
+- (https://sketchfab.com/3d-models/tree-stump-14c5d090d54d47cd831c43244f82e242)
+
+Ostalo:
+- [Shrine](https://sketchfab.com/3d-models/shrine-61c478f77ea14759b61dd8938e4015a6)
+- [Lampe](https://poly.pizza/m/37EufrdA2UB)
+- [Kameni put](https://poly.pizza/m/0vAJVcMEFdv)
+- [Žabe](https://poly.pizza/m/cwyNyIba6WE)
+- [Trava](https://poly.pizza/m/eFUpFgjCf0p)
+- [Žbun](https://poly.pizza/m/TSbIxkDtxF)
 
 ## Odakle sam pozajmio kod
+Kod u `main.cpp` i u fajlovima iz `include` direktorijuma (osim `stb_image.h`) sam pisao sam, uz pomoć iz [JoeyDeVrie]()-ovog repozitorijuma.
+Osim toga, sve ostalo je pozajmljeno iz istog repozitorijuma, uključujući strukturu repozitorijuma, `CMake` fajl, `.gitignore` itd.
 
 ## Progres
 | Funkcionalnost                  | Status | Progres  | Komentar                                            |
@@ -26,7 +47,7 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
 | SimpleShapes klasa              | Radi   | U izradi | -                                                   |
 
 ## Preostali posao
-- [ ] dovrsi ovaj README
+- [x] dovrsi ovaj README
 - [x] main i osnovne funkcionalnosti (12.04.2024.)
 - [x] nacrtaj pravougaonik (12.04.2024.)
 - [x] nacrtaj kocku (12.04.2024.)
@@ -51,5 +72,6 @@ Projekat za predmet Racunarska grafika na Matematickom fakultetu Univerziteta u 
   - [x] hdr (29.04.2024.)
 - [x] skybox (30.5.2024.)
 - [x] ucitavanje modela (3.6.2024.)
-- [ ] SimpleShapes klasa
-- [ ] voda
+- [x] SimpleShapes klasa
+- [x] voda
+- [x] svici
