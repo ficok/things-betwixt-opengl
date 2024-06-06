@@ -24,6 +24,8 @@ Osim toga, sve ostalo je pozajmljeno iz istog repozitorijuma, uključujući stru
 ![Things Betwixt](ThingsBetwixtScreenshot.png)
 
 ## Gde sam pronašao modele
+[Link ka model fajlovima](https://drive.google.com/drive/folders/1BLc8cdFd9BXdgl4e1esrviWqRjOcZmzQ?usp=sharing). Extract u `resources/objects/`; putanja treba da bude `resources/objects/ThingsBetwixt`.
+
 Većina modela je sa [ovog sajta](https://poly.pizza/) i [ovog sajta](https://sketchfab.com/feed). <br>
 Cveće:
 - (https://poly.pizza/m/dYQFgjU5Eqx)
