@@ -24,6 +24,8 @@ repository. Everything else, including the structure of the repository, `CMake` 
 ![Things Betwixt](ThingsBetwixtScreenshot.png)
 
 ## Where I got my resources
+[Link to the model files](https://drive.google.com/drive/folders/1BLc8cdFd9BXdgl4e1esrviWqRjOcZmzQ?usp=sharing). Extract into `resources/objects/`; the path should be `resources/objects/ThingsBetwixt`.
+
 Most models are from [this site](https://poly.pizza/) and [this site](https://sketchfab.com/feed). <br>
 Flowers:
 - (https://poly.pizza/m/dYQFgjU5Eqx)
