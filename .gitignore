@@ -1,5 +1,6 @@
 # models
 resources/objects/
+!resources/objects/.gitkeep
 
 # executable file
 ThingsBetwixt
