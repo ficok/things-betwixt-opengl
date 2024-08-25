@@ -46,6 +46,9 @@ Ostalo:
 - [Trava](https://poly.pizza/m/eFUpFgjCf0p)
 - [Žbun](https://poly.pizza/m/TSbIxkDtxF)
 
+Skybox:
+- [Ovaj link](https://jaxry.github.io/panorama-to-cubemap/) je bio koristan za pravljenje cubemap-e od slika visoke rezolucije.
+
 ## Progres
 | Funkcionalnost                  | Status | Progres | Komentar                                                        |
 |---------------------------------|--------|---------|-----------------------------------------------------------------|
