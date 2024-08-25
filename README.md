@@ -46,6 +46,9 @@ Other:
 - [Grass](https://poly.pizza/m/eFUpFgjCf0p)
 - [Bush](https://poly.pizza/m/TSbIxkDtxF)
 
+Skybox:
+- [This site](https://jaxry.github.io/panorama-to-cubemap/) was useful for creating a cubemap from high resolution images.
+
 ## Progress
 | Functionality                | Status  | Progress | Comment                                                    |
 |------------------------------|---------|----------|------------------------------------------------------------|
